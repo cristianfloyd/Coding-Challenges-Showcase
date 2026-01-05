@@ -1,15 +1,24 @@
 from typing import TYPE_CHECKING, Literal, overload
 
 from .repository import ArbolGenealogico
+from .utils.ui_logger import create_ui_logger
 from .visitors import PrintArbolVisitor, SearchArbolVisitor
 
 if TYPE_CHECKING:
     pass
 
+# Inicializar logger de UI al nivel del módulo
+# Esto sigue el patrón Singleton: una sola instancia para todo el módulo
+_ui_logger = create_ui_logger("src.ui")
+
 
 class DinastiaUI:
     def __init__(self, arbol_gen: "ArbolGenealogico") -> None:
         self.arbol = arbol_gen
+        # Log de inicialización
+        _ui_logger.info(
+            f"UI inicializada con árbol que contiene {len(arbol_gen.personas)} personas"
+        )
 
     def mostrar_menu_principal(self):
         """
@@ -20,8 +29,9 @@ class DinastiaUI:
         No recibe ni retorna ningún parámetro. Las acciones se efectúan en base
         a la opción elegida por el usuario en consola.
         """
-
         UIMessages.success("Bienvenido al sistema de árbol genealógico")
+        _ui_logger.info("Sistema iniciado - Menú principal activo")
+
         while True:
             print("\nMenu Principal")
             print("1. Agregar persona")
@@ -33,6 +43,8 @@ class DinastiaUI:
             print("7. Eliminar pareja")
             print("8. Salir")
             opcion = input("Ingrese una opción: ").strip().lower()
+
+            _ui_logger.info(f"Usuario seleccionó opción: {opcion}")
 
             match opcion:
                 case "1":
@@ -50,9 +62,11 @@ class DinastiaUI:
                 case "7":
                     self.eliminar_pareja()
                 case "8":
+                    _ui_logger.info("Usuario salió del sistema")
                     break
                 case _:
                     print("Opción invalida. Intente de nuevo.")
+                    _ui_logger.warning(f"Opción inválida ingresada: {opcion}")
 
     def agregar_persona(self):
         """
@@ -61,11 +75,18 @@ class DinastiaUI:
         """
         try:
             nombre = self.pedir_dato(mensaje="Ingrese el nombre de la persona: ", es_entero=False)
+            _ui_logger.info(f"Intentando registrar persona: {nombre}")
+
             nuevo_registro = self.arbol.registrar_persona(nombre)
+
             UIMessages.success(f"Persona {nuevo_registro.nombre} registrada exitosamente.")
             UIMessages.success(f"\nID: {nuevo_registro.id}")
+            _ui_logger.success(
+                f"Persona registrada: {nuevo_registro.nombre} (ID: {nuevo_registro.id})"
+            )
         except ValueError as e:
             UIMessages.error(str(e))
+            _ui_logger.error(f"Error al registrar persona: {e}")
 
     def buscar_persona(self):
         """
@@ -75,17 +96,24 @@ class DinastiaUI:
         try:
             print("Ingrese el nombre de la persona a buscar:")
             nombre = self.pedir_dato(mensaje="Nombre: ", es_entero=False)
+            _ui_logger.info(f"Buscando persona con nombre: {nombre}")
+
             visitor = SearchArbolVisitor(nombre)
             self.arbol.recorrer_arbol_completo(visitor)
             resultados = visitor.obtener_resultado()
+
             if not resultados:
                 UIMessages.error("No se encontraron resultados.")
+                _ui_logger.info(f"Búsqueda sin resultados para: {nombre}")
             else:
                 UIMessages.success("Resultados:")
+                _ui_logger.info(f"Búsqueda exitosa: {len(resultados)} resultado(s) encontrado(s)")
                 for r in resultados:
                     UIMessages.success(f"- {r.nombre} ({r.id})")
+                    _ui_logger.debug(f"Resultado encontrado: {r.nombre} (ID: {r.id})")
         except ValueError as e:
             UIMessages.error(str(e))
+            _ui_logger.error(f"Error en búsqueda: {e}")
 
     def mostrar_arbol(self):
         """
@@ -93,12 +121,15 @@ class DinastiaUI:
         Maneja el caso en que el árbol esté vacío y muestra un mensaje de error.
         """
         try:
+            _ui_logger.info("Mostrando árbol genealógico completo")
             visitor = PrintArbolVisitor()
             self.arbol.recorrer_arbol_completo(visitor)
             resultado = visitor.get_resultado()
             UIMessages.success(resultado)
+            _ui_logger.info("Árbol mostrado exitosamente")
         except ValueError as e:
             UIMessages.error(str(e))
+            _ui_logger.error(f"Error al mostrar árbol: {e}")
 
     def agregar_hijo(self):
         """
@@ -110,14 +141,17 @@ class DinastiaUI:
         try:
             padre_id = self.pedir_dato("Ingrese el ID del padre: ", True)
             hijo_id = self.pedir_dato("Ingrese el ID del hijo: ", True)
+            _ui_logger.info(f"Intentando agregar relación padre-hijo: {padre_id} -> {hijo_id}")
 
             padre = self.arbol.get_persona(padre_id)
             hijo = self.arbol.get_persona(hijo_id)
 
             self.arbol.add_hijo(padre, hijo)
             UIMessages.success(f"Ahora {padre.nombre} es padre de {hijo.nombre}")
+            _ui_logger.success(f"Relación padre-hijo creada: {padre.nombre} -> {hijo.nombre}")
         except ValueError as e:
             UIMessages.error(str(e))
+            _ui_logger.error(f"Error al agregar hijo: {e}")
 
     def agregar_pareja(self):
         try:
@@ -127,13 +161,20 @@ class DinastiaUI:
             persona2_id = self.pedir_dato(
                 mensaje="Ingrese el ID de la segunda persona: ", es_entero=True
             )
+            _ui_logger.info(
+                f"Intentando agregar relación de pareja: {persona1_id} <-> {persona2_id}"
+            )
 
             persona1 = self.arbol.get_persona(persona1_id)
             persona2 = self.arbol.get_persona(persona2_id)
             self.arbol.add_pareja(persona1, persona2)
             UIMessages.success(f"Ahora {persona1.nombre} es pareja de {persona2.nombre}")
+            _ui_logger.success(
+                f"Relación de pareja creada: {persona1.nombre} <-> {persona2.nombre}"
+            )
         except ValueError as e:
             UIMessages.error(str(e))
+            _ui_logger.error(f"Error al agregar pareja: {e}")
 
     @overload
     @staticmethod
@@ -174,12 +215,20 @@ class DinastiaUI:
         try:
             persona1_id = self.pedir_dato("Ingrese el ID de la primera persona: ", True)
             persona2_id = self.pedir_dato("Ingrese el ID de la segunda persona: ", True)
+            _ui_logger.info(
+                f"Intentando eliminar relación de pareja: {persona1_id} <-> {persona2_id}"
+            )
+
             persona1 = self.arbol.get_persona(persona1_id)
             persona2 = self.arbol.get_persona(persona2_id)
             self.arbol.remove_pareja(persona1, persona2)
             UIMessages.success(f"Ahora {persona1.nombre} no es pareja de {persona2.nombre}")
+            _ui_logger.success(
+                f"Relación de pareja eliminada: {persona1.nombre} <-> {persona2.nombre}"
+            )
         except ValueError as e:
             UIMessages.error(str(e))
+            _ui_logger.error(f"Error al eliminar pareja: {e}")
 
     def eliminar_persona(self):
         """
@@ -188,35 +237,82 @@ class DinastiaUI:
         """
         try:
             id_persona = self.pedir_dato("Ingrese el ID de la persona a eliminar: ", True)
+            _ui_logger.info(f"Intentando eliminar persona con ID: {id_persona}")
+
             persona = self.arbol.get_persona(id_persona)
             try:
                 self.arbol.eliminar_persona(id_persona)
                 UIMessages.success(f"Persona {persona.nombre} eliminada exitosamente.")
+                _ui_logger.success(f"Persona eliminada: {persona.nombre} (ID: {id_persona})")
             except ValueError as e:
                 mensaje_error = str(e)
                 if "ADVERTENCIA" in mensaje_error:
                     UIMessages.error(f"\n{mensaje_error}")
+                    _ui_logger.warning(
+                        f"Advertencia al eliminar persona {persona.nombre}: {mensaje_error}"
+                    )
                     confirma = input("Desea continuar? (s/n): ").strip().lower()
                     if confirma == "s":
                         confirma = True
                         self.arbol.eliminar_persona(id_persona, confirma)
                         UIMessages.success(f"Persona {persona.nombre} eliminada exitosamente.")
+                        _ui_logger.success(
+                            f"Persona eliminada con confirmación: {persona.nombre} (ID: {id_persona})"
+                        )
                     else:
                         UIMessages.error("Operación cancelada.")
+                        _ui_logger.info(
+                            f"Eliminación de persona {persona.nombre} cancelada por el usuario"
+                        )
                 else:
                     UIMessages.error(str(e))
+                    _ui_logger.error(f"Error al eliminar persona: {e}")
 
         except ValueError as e:
             UIMessages.error(str(e))
+            _ui_logger.error(f"Error al obtener persona para eliminar: {e}")
 
 
 class UIMessages:
+    """
+    Clase para mensajes de UI con logging integrado.
+
+    Mantiene la interfaz pública existente pero ahora usa logging
+    en lugar de solo print(), mejorando trazabilidad y control.
+
+    Esta clase sigue el principio de Single Responsibility: solo maneja
+    la presentación de mensajes al usuario, delegando el logging técnico
+    a UILogger.
+    """
+
     @staticmethod
     def error(message: str) -> None:
-        """Imprime un mensaje de error formateado."""
-        print(f"Error: {message}")
+        """
+        Muestra un mensaje de error al usuario y lo registra en logs.
+
+        Mantiene compatibilidad con código existente: sigue mostrando
+        el mensaje en consola, pero ahora también lo registra para
+        trazabilidad.
+
+        Args:
+            message: Mensaje de error a mostrar y registrar
+        """
+        error_msg = f"Error: {message}"
+        print(error_msg)  # Mantener para UI interactiva
+        _ui_logger.error(message)  # Logging para trazabilidad
 
     @staticmethod
     def success(message: str) -> None:
-        """Imprime un mensaje de éxito formateado."""
-        print(f"✅ {message}")
+        """
+        Muestra un mensaje de éxito al usuario y lo registra en logs.
+
+        Mantiene compatibilidad con código existente: sigue mostrando
+        el mensaje en consola, pero ahora también lo registra para
+        trazabilidad.
+
+        Args:
+            message: Mensaje de éxito a mostrar y registrar
+        """
+        success_msg = f"✅ {message}"
+        print(success_msg)  # Mantener para UI interactiva
+        _ui_logger.success(message)  # Logging para trazabilidad
