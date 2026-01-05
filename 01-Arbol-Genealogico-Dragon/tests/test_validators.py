@@ -20,7 +20,7 @@ def validador_con_persona() -> FamilyValidator:
     Fixture: Validador con una Persona
     Retorna un validador con un diccionario con una persona.
     """
-    return FamilyValidator({1: Mock(1, "Persona 1")})
+    return FamilyValidator({1: Mock(id=1, nombre="Persona 1", pareja=None, padres=[None, None])})
 
 
 # ================= validar_pareja start =================
