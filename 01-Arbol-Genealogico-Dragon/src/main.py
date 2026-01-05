@@ -9,9 +9,7 @@ import logging
 import sys
 from pathlib import Path
 
-from .data_loader import DemoDataLoader
-from .repository import ArbolGenealogico
-from .ui import DinastiaUI
+from .container import ApplicationContainer
 from .utils.logger import LoggerConfig
 
 
@@ -72,21 +70,18 @@ def main():
         logger.info("Inicializando aplicación...")
 
         # Crear árbol genealógico
-        logger.debug("Creando instancia de ArbolGenealogico")
-        arbol = ArbolGenealogico()
+        container = ApplicationContainer()
+        arbol =container.get_arbol()
+        data_loader = container.get_data_loader()
+        ui = container.get_ui()
 
-        # Cargar datos de demostración
+        # carga de datos
         logger.info("Cargando datos de demostración...")
-        logger.debug("Iniciando carga de datos de la Casa del Dragón")
-        DemoDataLoader.cargar_datos(arbol)
+        data_loader.cargar_datos(arbol)
         logger.info(f"Datos cargados exitosamente: {len(arbol.personas)} personas registradas")
 
         # Inicializar UI
         logger.info("Inicializando interfaz de usuario...")
-        ui = DinastiaUI(arbol)
-
-        # Iniciar menú principal
-        logger.info("Sistema listo - Iniciando menú principal")
         ui.mostrar_menu_principal()
 
         logger.info("Aplicación finalizada normalmente")
