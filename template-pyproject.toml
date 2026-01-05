@@ -1,0 +1,176 @@
+# ============================================================================
+# pyproject.toml - Template Base para Proyectos del Showcase
+# ============================================================================
+# Este es un template reutilizable. Para cada nuevo proyecto:
+# 1. Copia este archivo
+# 2. Actualiza las secciones marcadas con [TODO]
+# 3. Ajusta dependencias según necesidades del proyecto
+# ============================================================================
+
+[project]
+# [TODO] Cambiar estos valores por los de tu proyecto
+name = "nombre-del-proyecto"  # Nombre en formato kebab-case (sin espacios)
+version = "0.1.0"              # Versión inicial del proyecto
+description = "Descripción breve del proyecto y su propósito"
+requires-python = ">=3.10"      # Versión mínima de Python requerida
+dependencies = []                # Dependencias de producción (agregar según necesidad)
+
+# [TODO] Agregar si tienes información de autor
+# authors = [
+#     {name = "Cristian Arenas", email = "cristianfloyd@gmail.com"}
+# ]
+
+# [TODO] Agregar si tienes licencia
+# license = {text = "MIT"}
+
+# [TODO] Agregar si tienes README
+# readme = "README.md"
+
+[project.optional-dependencies]
+# Dependencias de desarrollo (comunes a todos los proyectos)
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "ruff>=0.1.0",
+]
+
+# Dependencias solo para testing
+test = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+]
+
+# Dependencias solo para linting
+lint = [
+    "ruff>=0.1.0",
+]
+
+# [TODO] Agregar dependencias específicas del proyecto aquí
+# Ejemplos comunes:
+# - "requests>=2.31.0"          # Para APIs HTTP
+# - "numpy>=1.24.0"              # Para cálculos numéricos
+# - "pandas>=2.0.0"              # Para análisis de datos
+# - "fastapi>=0.100.0"           # Para APIs web
+# - "sqlalchemy>=2.0.0"          # Para bases de datos
+# - "networkx>=3.0"              # Para grafos
+# - "matplotlib>=3.7.0"          # Para visualización
+
+# ============================================================================
+# Configuración de Pytest
+# ============================================================================
+[tool.pytest.ini_options]
+# Añade el directorio actual al PYTHONPATH (permite imports como "from src import ...")
+pythonpath = ["."]
+
+# Dónde buscar los tests
+testpaths = ["tests"]
+
+# Patrones de archivos/clases/funciones de test
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+# Opciones por defecto al ejecutar pytest
+addopts = [
+    "-v",                        # Verbose (muestra cada test)
+    "--tb=short",                # Traceback corto en errores
+    "--cov=src",                 # Medir cobertura del código en src/
+    "--cov-report=term-missing", # Mostrar líneas no cubiertas en terminal
+    "--cov-report=html",         # Generar reporte HTML en htmlcov/
+    "--cov-report=text:coverage_report.txt",  # Reporte en texto
+]
+
+# [TODO] Ajustar umbral de cobertura según necesidades
+# "--cov-fail-under=80",         # Falla si cobertura < 80%
+
+# Marcadores personalizados para categorizar tests
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+
+# ============================================================================
+# Configuración de Ruff (Linter y Formatter)
+# ============================================================================
+[tool.ruff]
+line-length = 100                # Longitud máxima de línea
+target-version = "py310"         # Versión objetivo de Python
+
+# Directorios/archivos a excluir del análisis
+exclude = [
+    ".git",
+    "__pycache__",
+    ".venv",
+    "venv",
+    "build",
+    "dist",
+    "*.egg-info",
+]
+
+[tool.ruff.lint]
+# Reglas a activar:
+# E   = pycodestyle errors (errores de estilo)
+# W   = pycodestyle warnings (advertencias de estilo)
+# F   = Pyflakes (detección de errores lógicos)
+# I   = isort (ordenamiento de imports)
+# N   = pep8-naming (convenciones de nombres)
+# UP  = pyupgrade (sugerencias de modernización)
+# B   = flake8-bugbear (detección de bugs comunes)
+# C4  = flake8-comprehensions (mejores comprensiones)
+# SIM = flake8-simplify (simplificaciones)
+select = [
+    "E",   # Errores de estilo
+    "W",   # Advertencias de estilo
+    "F",   # Pyflakes
+    "I",   # isort
+    "N",   # Naming
+    "UP",  # Pyupgrade (opcional, descomentar si quieres)
+    # "B",   # Bugbear (opcional, más estricto)
+    # "C4",  # Comprehensions (opcional)
+    # "SIM", # Simplify (opcional)
+]
+
+# Reglas a ignorar
+ignore = [
+    "E501",  # Line too long (manejado por formatter)
+    "B008",  # Do not perform function calls in argument defaults
+]
+
+[tool.ruff.lint.isort]
+# [TODO] Ajustar según el nombre de tu paquete principal
+known-first-party = ["src"]
+
+# ============================================================================
+# Configuración de Coverage (Cobertura de Código)
+# ============================================================================
+[tool.coverage.run]
+# Directorio fuente a medir
+source = ["src"]
+
+# Qué excluir de la medición
+omit = [
+    "*/tests/*",
+    "*/test_*.py",
+    "*/__pycache__/*",
+    "*/__init__.py",  # Opcional: excluir __init__.py
+]
+
+[tool.coverage.report]
+# Líneas a excluir del reporte de cobertura
+exclude_lines = [
+    "pragma: no cover",           # Líneas marcadas explícitamente
+    "def __repr__",               # Métodos mágicos comunes
+    "def __str__",                # Métodos mágicos comunes
+    "raise AssertionError",       # Asserts en tests
+    "raise NotImplementedError", # Métodos no implementados
+    "if __name__ == .__main__.:", # Bloque main
+    "if TYPE_CHECKING:",          # Imports de tipo
+    "@abstractmethod",            # Métodos abstractos
+    "class .*\\bProtocol\\):",    # Protocolos de typing
+    "class .*\\bABC\\):",         # Clases abstractas
+]
+
+# [TODO] Ajustar según necesidades
+# precision = 2                   # Decimales en porcentaje
+# show_missing = true              # Mostrar líneas faltantes

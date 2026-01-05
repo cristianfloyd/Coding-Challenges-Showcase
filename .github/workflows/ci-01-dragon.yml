@@ -1,0 +1,55 @@
+name: Dragon CI (Challenge 01)
+
+on:
+  push:
+    branches: ["main", "master"]
+    paths:
+      - "01-Arbol-Genealogico-Dragon/**"
+      - ".github/workflows/ci.yml"
+  pull_request:
+    branches: ["main", "master"]
+    paths:
+      - "01-Arbol-Genealogico-Dragon/**"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 01-Arbol-Genealogico-Dragon
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest pytest-cov ruff
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Lint with Ruff
+        run: |
+          ruff format --check .
+          ruff check .
+
+      - name: Run Tests & Generate Badge
+        run: |
+          python scripts/generate_badge.py
+
+      - name: Commit Badge (Optional)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          # Agregamos el archivo con la ruta completa relativa al root del REPO
+          git add coverage_badge.svg
+          # Commit only if there are changes
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update coverage badge [skip ci]" && git push)

@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environments
+.venv/
+env/
+venv/
+ENV/
+.env
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+coverage.json
+coverage_final.txt
+current_coverage.txt
+test_run.txt
+visitors_test_output.txt
+ls_output.txt
+model_cov.txt
+final_cov.txt
+.approval_tests_temp/
+htmlcov/
+
+# Formatting & Linting
+.ruff_cache/
+
+# IDEs & OS
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
