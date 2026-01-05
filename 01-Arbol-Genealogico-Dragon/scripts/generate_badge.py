@@ -52,7 +52,8 @@ def generate_badge(percentage: float):
         <path fill="{color}" d="M55 0h35v20H55z"/>
         <path fill="url(#b)" d="M0 0h90v20H0z"/>
     </g>
-    <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="11">
+    <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif"
+       font-size="11">
         <text x="27.5" y="15" fill="#010101" fill-opacity=".3">coverage</text>
         <text x="27.5" y="14">coverage</text>
         <text x="71.5" y="15" fill="#010101" fill-opacity=".3">{per_str}</text>

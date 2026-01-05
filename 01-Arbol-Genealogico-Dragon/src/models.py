@@ -51,7 +51,8 @@ class Persona:
         que el visitante realice una operación sobre esta instancia de Persona.
 
         Args:
-            visitor (ArbolVisitorInterface): El visitante que realizará una acción sobre la persona actual.
+            visitor (ArbolVisitorInterface): El visitante que realizará una acción
+            sobre la persona actual.
         """
         visitor.visitar(self)
 

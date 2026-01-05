@@ -1,0 +1,12 @@
+Metadata-Version: 2.4
+Name: arbol-genealogico-dragon
+Version: 1.0.0
+Summary: Sistema de árbol genealógico con validaciones
+Requires-Python: >=3.10
+License-File: LICENSE
+Provides-Extra: dev
+Requires-Dist: pytest>=7.4.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.1.0; extra == "dev"
+Requires-Dist: ruff>=0.1.0; extra == "dev"
+Requires-Dist: pyright>=1.1.3; extra == "dev"
+Dynamic: license-file
