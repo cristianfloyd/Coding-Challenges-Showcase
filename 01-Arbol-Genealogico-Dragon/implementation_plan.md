@@ -10,6 +10,7 @@ Este documento describe el plan de mejoras para elevar el estándar del proyecto
 ## 🎯 Objetivo
 
 Transformar el proyecto de un ejercicio bien implementado a un showcase profesional que demuestre:
+
 - Profesionalismo en ingeniería de software
 - Conocimiento de mejores prácticas de la industria
 - Capacidad de automatización y DevOps
@@ -22,6 +23,7 @@ Transformar el proyecto de un ejercicio bien implementado a un showcase profesio
 ### 🔴 Alta Prioridad (Crítico para estándar profesional)
 
 - [ ] **1. Logging Estructurado**
+
   - [ ] Crear módulo `src/utils/logger.py` con configuración de logging
   - [ ] Reemplazar todos los `print()` por logging apropiado
   - [ ] Configurar niveles de log (DEBUG, INFO, WARNING, ERROR)
@@ -31,6 +33,7 @@ Transformar el proyecto de un ejercicio bien implementado a un showcase profesio
   - **Tiempo estimado:** 2-3 horas
 
 - [ ] **2. Excepciones Personalizadas**
+
   - [ ] Crear `src/exceptions.py` con jerarquía de excepciones
   - [ ] Definir: `ArbolGenealogicoError`, `PersonaNoEncontradaError`, `ValidacionError`, `RelacionInvalidaError`
   - [ ] Reemplazar `ValueError` genéricos por excepciones específicas
@@ -39,29 +42,31 @@ Transformar el proyecto de un ejercicio bien implementado a un showcase profesio
   - **Archivos a modificar:** `src/exceptions.py` (nuevo), `src/repository.py`, `src/validators.py`, `src/ui.py`
   - **Tiempo estimado:** 1-2 horas
 
-- [ ] **3. Archivo LICENSE**
-  - [ ] Crear archivo `LICENSE` con licencia MIT
-  - [ ] Actualizar `pyproject.toml` con metadata de licencia
-  - [ ] Verificar que README.md referencia correctamente la licencia
+- [x] **3. Archivo LICENSE**
+
+  - [x] Crear archivo `LICENSE` con licencia MIT
+  - [x] Actualizar `pyproject.toml` con metadata de licencia
+  - [x] Verificar que README.md referencia correctamente la licencia
   - **Archivos a crear/modificar:** `LICENSE` (nuevo), `pyproject.toml`
   - **Tiempo estimado:** 15 minutos
 
-- [ ] **4. Pre-commit Hooks**
-  - [ ] Crear `.pre-commit-config.yaml`
-  - [ ] Configurar hooks para: ruff (lint + format), mypy (opcional), pre-commit-hooks básicos
-  - [ ] Instalar pre-commit: `pip install pre-commit`
-  - [ ] Instalar hooks: `pre-commit install`
-  - [ ] Probar que funciona: `pre-commit run --all-files`
-  - [ ] Documentar en README cómo instalar
+- [x] **4. Pre-commit Hooks**
+
+  - [x] Crear `.pre-commit-config.yaml`
+  - [x] Configurar hooks for: ruff (lint + format), pyright (strict), pre-commit-hooks básicos
+  - [x] Instalar pre-commit: `pip install pre-commit`
+  - [x] Instalar hooks: `pre-commit install`
+  - [x] Probar que funciona: `pre-commit run --all-files`
+  - [x] Documentar en README cómo instalar
   - **Archivos a crear:** `.pre-commit-config.yaml`
   - **Tiempo estimado:** 1 hora
 
-- [ ] **5. Makefile para Automatización**
-  - [ ] Crear `Makefile` con comandos comunes
-  - [ ] Incluir: `install`, `test`, `lint`, `format`, `coverage`, `clean`
-  - [ ] Agregar comandos útiles: `run`, `test-watch` (opcional)
-  - [ ] Documentar en README
-  - [ ] Probar todos los comandos
+- [x] **5. Makefile para Automatización**
+  - [x] Crear `Makefile` con comandos comunes
+  - [x] Incluir: `install`, `test`, `lint`, `format`, `coverage`, `clean`
+  - [x] Agregar comandos útiles: `run`, `test-watch` (opcional)
+  - [x] Documentar en README
+  - [x] Probar todos los comandos
   - **Archivos a crear:** `Makefile`
   - **Tiempo estimado:** 1 hora
 
@@ -70,6 +75,7 @@ Transformar el proyecto de un ejercicio bien implementado a un showcase profesio
 ### 🟡 Media Prioridad (Mejora significativa)
 
 - [ ] **6. CHANGELOG.md**
+
   - [ ] Crear `CHANGELOG.md` siguiendo formato Keep a Changelog
   - [ ] Documentar versión 1.0.0 actual
   - [ ] Establecer proceso para actualizar en futuras versiones
@@ -78,6 +84,7 @@ Transformar el proyecto de un ejercicio bien implementado a un showcase profesio
   - **Tiempo estimado:** 30 minutos
 
 - [ ] **7. Badges Adicionales en README**
+
   - [ ] Agregar badge de CI/CD status
   - [ ] Agregar badge de Ruff (code style)
   - [ ] Agregar badge de License
@@ -87,6 +94,7 @@ Transformar el proyecto de un ejercicio bien implementado a un showcase profesio
   - **Tiempo estimado:** 30 minutos
 
 - [ ] **8. Dependabot para Security Scanning**
+
   - [ ] Crear `.github/dependabot.yml`
   - [ ] Configurar para escanear dependencias de pip
   - [ ] Configurar schedule semanal
@@ -94,8 +102,9 @@ Transformar el proyecto de un ejercicio bien implementado a un showcase profesio
   - **Archivos a crear:** `.github/dependabot.yml`
   - **Tiempo estimado:** 15 minutos
 
-- [ ] **9. Mejoras en CI/CD Pipeline**
-  - [ ] Agregar step de type checking con mypy
+- [x] **9. Mejoras en CI/CD Pipeline**
+
+  - [x] Agregar step de type checking con pyright
   - [ ] Agregar step de security scanning (safety, bandit)
   - [ ] Mejorar reportes de coverage (HTML + badge)
   - [ ] Agregar cache de dependencias para velocidad
@@ -116,6 +125,7 @@ Transformar el proyecto de un ejercicio bien implementado a un showcase profesio
 ### 🟢 Baja Prioridad (Valor agregado, opcional)
 
 - [ ] **11. Dockerización**
+
   - [ ] Crear `Dockerfile` para la aplicación
   - [ ] Crear `docker-compose.yml` (opcional)
   - [ ] Crear `.dockerignore`
@@ -125,6 +135,7 @@ Transformar el proyecto de un ejercicio bien implementado a un showcase profesio
   - **Tiempo estimado:** 1-2 horas
 
 - [ ] **12. Documentación con Sphinx o MkDocs**
+
   - [ ] Elegir herramienta (Sphinx o MkDocs)
   - [ ] Configurar estructura de documentación
   - [ ] Generar documentación desde docstrings
@@ -135,6 +146,7 @@ Transformar el proyecto de un ejercicio bien implementado a un showcase profesio
   - **Tiempo estimado:** 3-4 horas
 
 - [ ] **13. Performance Testing/Benchmarks**
+
   - [ ] Crear `tests/test_performance.py`
   - [ ] Implementar benchmarks con pytest-benchmark
   - [ ] Agregar tests de carga (árboles grandes)
@@ -144,6 +156,7 @@ Transformar el proyecto de un ejercicio bien implementado a un showcase profesio
   - **Tiempo estimado:** 2 horas
 
 - [ ] **14. CONTRIBUTING.md**
+
   - [ ] Crear guía de contribución
   - [ ] Incluir: setup, estándares de código, proceso de PR
   - [ ] Agregar código de conducta (opcional)
@@ -164,13 +177,14 @@ Transformar el proyecto de un ejercicio bien implementado a un showcase profesio
 ## 📊 Progreso General
 
 **Total de tareas:** 15  
-**Completadas:** 0  
+**Completadas:** 4  
 **En progreso:** 0  
-**Pendientes:** 15
+**Pendientes:** 11
 
 **Progreso por prioridad:**
-- 🔴 Alta: 0/5 (0%)
-- 🟡 Media: 0/5 (0%)
+
+- 🔴 Alta: 3/5 (60%)
+- 🟡 Media: 1/5 (20%)
 - 🟢 Baja: 0/5 (0%)
 
 ---
@@ -178,20 +192,24 @@ Transformar el proyecto de un ejercicio bien implementado a un showcase profesio
 ## 📝 Notas de Implementación
 
 ### Logging Estructurado
+
 - Considerar usar `structlog` para logging estructurado avanzado (opcional)
 - Configurar rotación de logs si se implementa logging a archivo
 - Documentar niveles de log en README
 
 ### Excepciones Personalizadas
+
 - Mantener compatibilidad con código existente
 - Considerar crear excepciones específicas para cada tipo de validación
 - Documentar jerarquía de excepciones
 
 ### Pre-commit Hooks
+
 - Verificar que todos los hooks funcionan en diferentes sistemas operativos
 - Considerar agregar hook para verificar que tests pasan (puede ser lento)
 
 ### CI/CD
+
 - Considerar agregar notificaciones (Slack, email) en caso de fallos
 - Implementar deployment automático si aplica
 - Agregar badges dinámicos que reflejen el estado real
@@ -201,6 +219,7 @@ Transformar el proyecto de un ejercicio bien implementado a un showcase profesio
 ## 🎓 Aprendizajes y Mejores Prácticas
 
 A medida que se implementen las mejoras, documentar:
+
 - Desafíos encontrados
 - Decisiones de diseño tomadas
 - Alternativas consideradas y por qué se descartaron
