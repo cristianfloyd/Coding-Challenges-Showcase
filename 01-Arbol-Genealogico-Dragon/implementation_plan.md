@@ -25,11 +25,13 @@ Transformar el proyecto de un ejercicio bien implementado a un showcase profesio
 - [ ] **1. Logging Estructurado**
 
   - [ ] Crear módulo `src/utils/logger.py` con configuración de logging
-  - [ ] Reemplazar todos los `print()` por logging apropiado
+  - [ ] Agregar logging a operaciones internas (NO reemplazar `print()` de UI)
   - [ ] Configurar niveles de log (DEBUG, INFO, WARNING, ERROR)
-  - [ ] Agregar logging a operaciones críticas (validaciones, errores)
+  - [ ] Agregar logging a operaciones críticas (validaciones, errores internos)
+  - [ ] Configurar output a archivo (`app.log`) y consola solo para errores críticos
   - [ ] Actualizar tests para verificar logs cuando sea necesario
-  - **Archivos a modificar:** `src/ui.py`, `src/repository.py`, `src/validators.py`, `src/main.py`
+  - **Archivos a modificar:** `src/repository.py`, `src/validators.py`, `src/main.py` (NO `src/ui.py`)
+  - **Nota:** Mantener `print()` en `src/ui.py` para mensajes de usuario
   - **Tiempo estimado:** 2-3 horas
 
 - [ ] **2. Excepciones Personalizadas**
@@ -193,6 +195,10 @@ Transformar el proyecto de un ejercicio bien implementado a un showcase profesio
 
 ### Logging Estructurado
 
+- **IMPORTANTE**: Mantener separación entre mensajes de UI (`print()`) y logs técnicos (`logging`)
+- Los `print()` en `src/ui.py` son parte de la experiencia de usuario, NO reemplazarlos
+- Logging solo para: debugging, auditoría, errores internos, operaciones de repositorio
+- Configurar handler de archivo para todo (DEBUG+) y handler de consola solo para ERROR
 - Considerar usar `structlog` para logging estructurado avanzado (opcional)
 - Configurar rotación de logs si se implementa logging a archivo
 - Documentar niveles de log en README
