@@ -4,7 +4,6 @@ from .models import Persona
 
 if TYPE_CHECKING:
     from .interfaces import ArbolRepository
-    from .repository import ArbolGenealogico
 
 # Para type hints usamos el Protocol, pero en runtime puede ser cualquier implementación
 from .interfaces import ArbolRepository
