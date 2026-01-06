@@ -257,7 +257,7 @@ class DinastiaUI:
                         self.arbol.eliminar_persona(id_persona, confirma)
                         UIMessages.success(f"Persona {persona.nombre} eliminada exitosamente.")
                         _ui_logger.success(
-                            f"Persona eliminada con confirmación: {persona.nombre} (ID: {id_persona})"
+                            f"Persona eliminada con confirmación: {persona.nombre} (ID: {id_persona})" # noqa: E501
                         )
                     else:
                         UIMessages.error("Operación cancelada.")

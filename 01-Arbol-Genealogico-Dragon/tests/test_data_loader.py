@@ -1,18 +1,30 @@
+from typing import TYPE_CHECKING
 from unittest.mock import patch
 
 import pytest
 
-from src.data_loader import DemoDataLoader
+from src.data_loader import DataLoaderDemo
 from src.models import Persona
+
+if TYPE_CHECKING:
+    from src.interfaces import ArbolRepository
+
+# Import concreto para crear instancias en tests
 from src.repository import ArbolGenealogico
 
 
-def test_cargar_datos_crea_personas(arbol_vacio: ArbolGenealogico):
+def test_cargar_datos_crea_personas(arbol_vacio: "ArbolRepository"):
     """
     Test de integración: Verificar que cargar_datos puebla el árbol.
+
+    Este test verifica que cualquier implementación de ArbolRepository
+    puede ser utilizada con DataLoaderDemo.
     """
+    # ARRANGE
+    loader = DataLoaderDemo()
+
     # ACT
-    DemoDataLoader.cargar_datos(arbol_vacio)
+    loader.cargar_datos(arbol_vacio)
 
     # ASSERT
     assert len(arbol_vacio.personas) > 0
@@ -22,12 +34,14 @@ def test_cargar_datos_crea_personas(arbol_vacio: ArbolGenealogico):
     assert any(p.nombre == "Daemon" for p in arbol_vacio.personas.values())
 
 
-def test_cargar_datos_establece_relaciones(arbol_vacio: ArbolGenealogico):
+def test_cargar_datos_establece_relaciones(arbol_vacio: "ArbolRepository"):
     """
     Test de integración: Verificar relaciones clave.
     """
+    # ARRANGE
+    loader = DataLoaderDemo()
     # ACT
-    DemoDataLoader.cargar_datos(arbol_vacio)
+    loader.cargar_datos(arbol_vacio)
 
     # Recuperar personas por nombre (helper simple para el test)
     def get_by_name(nombre: str) -> Persona | None:
@@ -50,11 +64,12 @@ def test_cargar_datos_establece_relaciones(arbol_vacio: ArbolGenealogico):
     assert viserys_i in rhaenyra.padres
 
 
-def test_cargar_datos_maneja_parejas_complejas(arbol_vacio: ArbolGenealogico):
+def test_cargar_datos_maneja_parejas_complejas(arbol_vacio: "ArbolRepository"):
     """
     Test de integración: Verificar lógica compleja de parejas (Daemon y Rhaenyra).
     """
-    DemoDataLoader.cargar_datos(arbol_vacio)
+    loader = DataLoaderDemo()
+    loader.cargar_datos(arbol_vacio)
 
     def get_by_name(nombre: str) -> Persona | None:
         for p in arbol_vacio.personas.values():
@@ -74,7 +89,7 @@ def test_cargar_datos_maneja_parejas_complejas(arbol_vacio: ArbolGenealogico):
     assert laena.pareja is None  # type: ignore
 
 
-def test_remover_pareja_seguro_maneja_error(arbol_vacio: ArbolGenealogico):
+def test_remover_pareja_seguro_maneja_error(arbol_vacio: "ArbolRepository"):
     """
     Test: _remover_pareja_seguro maneja errores de remove_pareja
 
@@ -82,6 +97,7 @@ def test_remover_pareja_seguro_maneja_error(arbol_vacio: ArbolGenealogico):
     _remover_pareja_seguro lo captura silenciosamente.
     """
     # ARRANGE
+    loader = DataLoaderDemo()
     persona1 = arbol_vacio.registrar_persona("Persona 1")
     persona2 = arbol_vacio.registrar_persona("Persona 2")
     persona1.pareja = persona2  # Simular que son parejas
@@ -89,24 +105,25 @@ def test_remover_pareja_seguro_maneja_error(arbol_vacio: ArbolGenealogico):
     # Simular que remove_pareja lanza un error
     with patch.object(arbol_vacio, "remove_pareja", side_effect=ValueError("Error inesperado")):
         # ACT
-        DemoDataLoader._remover_pareja_seguro(arbol_vacio, persona1, persona2)  # type: ignore
+        loader._remover_pareja_seguro(arbol_vacio, persona1, persona2)  # type: ignore
 
         # ASSERT
         # Si no lanza excepción, el test pasa (el error fue capturado)
         assert True  # El éxito es que no lanzó excepción
 
 
-def test_get_persona_lanza_error_si_no_existe(arbol_vacio: ArbolGenealogico):
+def test_get_persona_lanza_error_si_no_existe(arbol_vacio: "ArbolRepository"):
     """
     Test: _get_persona lanza error si la persona no existe
 
     Verifica el manejo de errores cuando se busca una persona inexistente.
     """
+    loader = DataLoaderDemo()
     # ARRANGE
     arbol_vacio.registrar_persona("Persona Existente")
 
     # ACT & ASSERT
     with pytest.raises(ValueError) as exc_info:
-        DemoDataLoader._get_persona(arbol_vacio, "Persona Inexistente")  # type: ignore
+        loader._get_persona(arbol_vacio, "Persona Inexistente")  # type: ignore
 
     assert "Persona 'Persona Inexistente' no encontrada" in str(exc_info.value)

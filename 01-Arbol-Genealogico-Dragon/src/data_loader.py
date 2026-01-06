@@ -1,35 +1,44 @@
+from typing import TYPE_CHECKING
+
 from .models import Persona
-from .repository import ArbolGenealogico
+
+if TYPE_CHECKING:
+    from .interfaces import ArbolRepository
+    from .repository import ArbolGenealogico
+
+# Para type hints usamos el Protocol, pero en runtime puede ser cualquier implementación
+from .interfaces import ArbolRepository
 
 
-class DemoDataLoader:
+class DataLoaderDemo:
     """
     Clase responsable exclusivamente de cargar los datos de demostración
     de la Casa del Dragón.
     """
 
-    @staticmethod
-    def cargar_datos(arbol: ArbolGenealogico) -> None:
+    def cargar_datos(self, arbol: "ArbolRepository") -> None:
         """
         Carga datos de demostración del árbol genealógico de La Casa del Dragón.
 
         Este método orquesta la carga completa dividida por generaciones y ramas familiares.
-        """
-        DemoDataLoader._cargar_generacion_aegon_i(arbol)
-        DemoDataLoader._cargar_hijos_aenys_i(arbol)
-        DemoDataLoader._cargar_hijos_aegon_y_rhaena(arbol)
-        DemoDataLoader._cargar_generacion_jaehaerys_i(arbol)
-        DemoDataLoader._cargar_hijos_baelon_y_alyssa(arbol)
-        DemoDataLoader._cargar_generacion_viserys_i(arbol)
-        DemoDataLoader._cargar_hijos_aegon_ii(arbol)
-        DemoDataLoader._cargar_generacion_daemon(arbol)
-        DemoDataLoader._cargar_hijos_daemon_y_rhaenyra(arbol)
-        DemoDataLoader._cargar_generacion_aegon_iii(arbol)
-        DemoDataLoader._cargar_generacion_viserys_ii(arbol)
 
-    @staticmethod
+        Args:
+            arbol: Repositorio del árbol genealógico donde se cargarán los datos.
+        """
+        self._cargar_generacion_aegon_i(arbol)
+        self._cargar_hijos_aenys_i(arbol)
+        self._cargar_hijos_aegon_y_rhaena(arbol)
+        self._cargar_generacion_jaehaerys_i(arbol)
+        self._cargar_hijos_baelon_y_alyssa(arbol)
+        self._cargar_generacion_viserys_i(arbol)
+        self._cargar_hijos_aegon_ii(arbol)
+        self._cargar_generacion_daemon(arbol)
+        self._cargar_hijos_daemon_y_rhaenyra(arbol)
+        self._cargar_generacion_aegon_iii(arbol)
+        self._cargar_generacion_viserys_ii(arbol)
+
     def _remover_pareja_seguro(
-        arbol: ArbolGenealogico, persona1: Persona, persona2: Persona
+        self, arbol: "ArbolRepository", persona1: Persona, persona2: Persona
     ) -> None:
         """Helper para remover parejas de forma segura."""
         try:
@@ -38,16 +47,14 @@ class DemoDataLoader:
         except ValueError:
             pass
 
-    @staticmethod
-    def _get_persona(arbol: ArbolGenealogico, nombre: str) -> Persona:
+    def _get_persona(self, arbol: "ArbolRepository", nombre: str) -> Persona:
         """Recupera una persona por nombre del árbol existente."""
         for p in arbol.personas.values():
             if p.nombre == nombre:
                 return p
         raise ValueError(f"Error interno: Persona '{nombre}' no encontrada durante la carga.")
 
-    @staticmethod
-    def _cargar_generacion_aegon_i(arbol: ArbolGenealogico) -> None:
+    def _cargar_generacion_aegon_i(self, arbol: "ArbolRepository") -> None:
         # Aegon I y sus esposas
         aegon_i = arbol.registrar_persona("Aegon I")
         rhaenys = arbol.registrar_persona("Rhaenys")
@@ -63,9 +70,8 @@ class DemoDataLoader:
         arbol.add_hijo(aegon_i, maegor_i)
         arbol.add_hijo(visenya, maegor_i)
 
-    @staticmethod
-    def _cargar_hijos_aenys_i(arbol: ArbolGenealogico) -> None:
-        aenys_i = DemoDataLoader._get_persona(arbol, "Aenys I")
+    def _cargar_hijos_aenys_i(self, arbol: "ArbolRepository") -> None:
+        aenys_i = self._get_persona(arbol, "Aenys I")
 
         # Alyssa Velaryon, esposa de Aenys I
         alyssa_velaryon = arbol.registrar_persona("Alyssa Velaryon")
@@ -86,11 +92,10 @@ class DemoDataLoader:
             arbol.add_hijo(aenys_i, hijo)
             arbol.add_hijo(alyssa_velaryon, hijo)
 
-    @staticmethod
-    def _cargar_hijos_aegon_y_rhaena(arbol: ArbolGenealogico) -> None:
-        aegon_principe = DemoDataLoader._get_persona(arbol, "Aegon (hijo de Aenys I)")
-        rhaena = DemoDataLoader._get_persona(arbol, "Rhaena")
-        maegor_i = DemoDataLoader._get_persona(arbol, "Maegor I el Cruel")
+    def _cargar_hijos_aegon_y_rhaena(self, arbol: "ArbolRepository") -> None:
+        aegon_principe = self._get_persona(arbol, "Aegon (hijo de Aenys I)")
+        rhaena = self._get_persona(arbol, "Rhaena")
+        maegor_i = self._get_persona(arbol, "Maegor I el Cruel")
 
         # Relaciones de Aegon y Rhaena
         arbol.add_pareja(aegon_principe, rhaena)
@@ -104,13 +109,12 @@ class DemoDataLoader:
             arbol.add_hijo(rhaena, hija)
 
         # Rhaena se casa con Maegor después
-        DemoDataLoader._remover_pareja_seguro(arbol, aegon_principe, rhaena)
+        self._remover_pareja_seguro(arbol, aegon_principe, rhaena)
         arbol.add_pareja(maegor_i, rhaena)
 
-    @staticmethod
-    def _cargar_generacion_jaehaerys_i(arbol: ArbolGenealogico) -> None:
-        jaehaerys_i = DemoDataLoader._get_persona(arbol, "Jaehaerys I el Conciliador")
-        alysanne = DemoDataLoader._get_persona(arbol, "Alysanne la Bondadosa")
+    def _cargar_generacion_jaehaerys_i(self, arbol: "ArbolRepository") -> None:
+        jaehaerys_i = self._get_persona(arbol, "Jaehaerys I el Conciliador")
+        alysanne = self._get_persona(arbol, "Alysanne la Bondadosa")
 
         # Jaehaerys I y Alysanne (hermanos casados)
         arbol.add_pareja(jaehaerys_i, alysanne)
@@ -138,7 +142,7 @@ class DemoDataLoader:
             arbol.add_hijo(alysanne, hijo)
 
         # Aemon se casa con Jocelyn Baratheon
-        aemon = DemoDataLoader._get_persona(arbol, "Aemon (hijo de Jaehaerys I)")
+        aemon = self._get_persona(arbol, "Aemon (hijo de Jaehaerys I)")
         jocelyn_baratheon = arbol.registrar_persona("Jocelyn Baratheon")
         arbol.add_pareja(aemon, jocelyn_baratheon)
 
@@ -147,10 +151,9 @@ class DemoDataLoader:
         arbol.add_hijo(aemon, rhaenys_reina)
         arbol.add_hijo(jocelyn_baratheon, rhaenys_reina)
 
-    @staticmethod
-    def _cargar_hijos_baelon_y_alyssa(arbol: ArbolGenealogico) -> None:
-        baelon = DemoDataLoader._get_persona(arbol, "Baelon")
-        alyssa_targaryen = DemoDataLoader._get_persona(arbol, "Alyssa Targaryen")
+    def _cargar_hijos_baelon_y_alyssa(self, arbol: "ArbolRepository") -> None:
+        baelon = self._get_persona(arbol, "Baelon")
+        alyssa_targaryen = self._get_persona(arbol, "Alyssa Targaryen")
 
         # Baelon y Alyssa (hermanos casados)
         arbol.add_pareja(baelon, alyssa_targaryen)
@@ -162,9 +165,8 @@ class DemoDataLoader:
             arbol.add_hijo(baelon, hijo)
             arbol.add_hijo(alyssa_targaryen, hijo)
 
-    @staticmethod
-    def _cargar_generacion_viserys_i(arbol: ArbolGenealogico) -> None:
-        viserys_i = DemoDataLoader._get_persona(arbol, "Viserys I")
+    def _cargar_generacion_viserys_i(self, arbol: "ArbolRepository") -> None:
+        viserys_i = self._get_persona(arbol, "Viserys I")
 
         # Viserys I - Primer matrimonio con Aemma Arryn
         aemma_arryn = arbol.registrar_persona("Aemma Arryn")
@@ -180,7 +182,7 @@ class DemoDataLoader:
 
         # Viserys I - Segundo matrimonio con Alicent Hightower
         alicent_hightower = arbol.registrar_persona("Alicent Hightower")
-        DemoDataLoader._remover_pareja_seguro(arbol, viserys_i, aemma_arryn)
+        self._remover_pareja_seguro(arbol, viserys_i, aemma_arryn)
         arbol.add_pareja(viserys_i, alicent_hightower)
 
         # Hijos de Viserys I y Alicent Hightower
@@ -195,10 +197,9 @@ class DemoDataLoader:
             arbol.add_hijo(viserys_i, hijo)
             arbol.add_hijo(alicent_hightower, hijo)
 
-    @staticmethod
-    def _cargar_hijos_aegon_ii(arbol: ArbolGenealogico) -> None:
-        aegon_ii = DemoDataLoader._get_persona(arbol, "Aegon II el Usurpador")
-        helaena = DemoDataLoader._get_persona(arbol, "Helaena")
+    def _cargar_hijos_aegon_ii(self, arbol: "ArbolRepository") -> None:
+        aegon_ii = self._get_persona(arbol, "Aegon II el Usurpador")
+        helaena = self._get_persona(arbol, "Helaena")
 
         # Aegon II y Helaena (hermanos casados)
         arbol.add_pareja(aegon_ii, helaena)
@@ -210,9 +211,8 @@ class DemoDataLoader:
             arbol.add_hijo(aegon_ii, hijo)
             arbol.add_hijo(helaena, hijo)
 
-    @staticmethod
-    def _cargar_generacion_daemon(arbol: ArbolGenealogico) -> None:
-        daemon = DemoDataLoader._get_persona(arbol, "Daemon")
+    def _cargar_generacion_daemon(self, arbol: "ArbolRepository") -> None:
+        daemon = self._get_persona(arbol, "Daemon")
 
         # Daemon y Laena Velaryon
         laena_velaryon = arbol.registrar_persona("Laena Velaryon")
@@ -225,15 +225,14 @@ class DemoDataLoader:
             arbol.add_hijo(daemon, hija)
             arbol.add_hijo(laena_velaryon, hija)
 
-    @staticmethod
-    def _cargar_hijos_daemon_y_rhaenyra(arbol: ArbolGenealogico) -> None:
-        daemon = DemoDataLoader._get_persona(arbol, "Daemon")
-        rhaenyra = DemoDataLoader._get_persona(arbol, "Rhaenyra")
+    def _cargar_hijos_daemon_y_rhaenyra(self, arbol: "ArbolRepository") -> None:
+        daemon = self._get_persona(arbol, "Daemon")
+        rhaenyra = self._get_persona(arbol, "Rhaenyra")
         # Recuperar pareja anterior de Daemon para removerla
-        laena_velaryon = DemoDataLoader._get_persona(arbol, "Laena Velaryon")
+        laena_velaryon = self._get_persona(arbol, "Laena Velaryon")
 
         # Daemon se casa con Rhaenyra (sobrina)
-        DemoDataLoader._remover_pareja_seguro(arbol, daemon, laena_velaryon)
+        self._remover_pareja_seguro(arbol, daemon, laena_velaryon)
         arbol.add_pareja(daemon, rhaenyra)
 
         # Hijos de Daemon y Rhaenyra
@@ -243,11 +242,10 @@ class DemoDataLoader:
             arbol.add_hijo(daemon, hijo)
             arbol.add_hijo(rhaenyra, hijo)
 
-    @staticmethod
-    def _cargar_generacion_aegon_iii(arbol: ArbolGenealogico) -> None:
-        aegon_iii = DemoDataLoader._get_persona(arbol, "Aegon III Veneno de Dragón")
-        aegon_ii = DemoDataLoader._get_persona(arbol, "Aegon II el Usurpador")
-        jaehaera = DemoDataLoader._get_persona(arbol, "Jaehaera")
+    def _cargar_generacion_aegon_iii(self, arbol: "ArbolRepository") -> None:
+        aegon_iii = self._get_persona(arbol, "Aegon III Veneno de Dragón")
+        aegon_ii = self._get_persona(arbol, "Aegon II el Usurpador")
+        jaehaera = self._get_persona(arbol, "Jaehaera")
 
         # Jaehaera se casa con Aegon III (después de la muerte de Aegon II)
         # Nota: Aegon II ya no es pareja de Jaehaera (eran padre e hija, no pareja,
@@ -258,7 +256,7 @@ class DemoDataLoader:
         # Pero Aegon II es PADRE de Jaehaera, no pareja.
         # Mantendremos la lógica original por compatibilidad aunque sea extraña,
         # o asumimos que se refería a limpiar estado.
-        DemoDataLoader._remover_pareja_seguro(arbol, aegon_ii, jaehaera)
+        self._remover_pareja_seguro(arbol, aegon_ii, jaehaera)
         arbol.add_pareja(aegon_iii, jaehaera)
 
         # Hijos de Aegon III (con otra esposa, no especificada en el texto)
@@ -275,13 +273,12 @@ class DemoDataLoader:
             arbol.add_hijo(aegon_iii, hijo)
 
         # Baelor I y Daena (hermanos casados, no consumado)
-        baelor_i = DemoDataLoader._get_persona(arbol, "Baelor I el Bendito")
-        daena = DemoDataLoader._get_persona(arbol, "Daena la Rebelde")
+        baelor_i = self._get_persona(arbol, "Baelor I el Bendito")
+        daena = self._get_persona(arbol, "Daena la Rebelde")
         arbol.add_pareja(baelor_i, daena)
 
-    @staticmethod
-    def _cargar_generacion_viserys_ii(arbol: ArbolGenealogico) -> None:
-        viserys_ii = DemoDataLoader._get_persona(arbol, "Viserys II")
+    def _cargar_generacion_viserys_ii(self, arbol: "ArbolRepository") -> None:
+        viserys_ii = self._get_persona(arbol, "Viserys II")
 
         # Viserys II se casa con Larra Rogare
         larra_rogare = arbol.registrar_persona("Larra Rogare")
@@ -294,8 +291,8 @@ class DemoDataLoader:
             arbol.add_hijo(viserys_ii, hijo)
             arbol.add_hijo(larra_rogare, hijo)
 
-        aegon_iv = DemoDataLoader._get_persona(arbol, "Aegon IV el Indigno")
-        naerys = DemoDataLoader._get_persona(arbol, "Naerys")
+        aegon_iv = self._get_persona(arbol, "Aegon IV el Indigno")
+        naerys = self._get_persona(arbol, "Naerys")
 
         # Aegon IV y Naerys (hermanos casados)
         arbol.add_pareja(aegon_iv, naerys)
@@ -306,7 +303,7 @@ class DemoDataLoader:
         arbol.add_hijo(naerys, daeron_ii)
 
         # Daemon Fuegoscuro (hijo de Aegon IV y Daena la Rebelde)
-        daena = DemoDataLoader._get_persona(arbol, "Daena la Rebelde")
+        daena = self._get_persona(arbol, "Daena la Rebelde")
         daemon_fuegoscuro = arbol.registrar_persona("Daemon Fuegoscuro")
         arbol.add_hijo(aegon_iv, daemon_fuegoscuro)
         arbol.add_hijo(daena, daemon_fuegoscuro)

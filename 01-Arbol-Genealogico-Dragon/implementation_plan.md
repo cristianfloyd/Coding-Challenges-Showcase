@@ -22,17 +22,46 @@ Transformar el proyecto de un ejercicio bien implementado a un showcase profesio
 
 ### 🔴 Alta Prioridad (Crítico para estándar profesional)
 
-- [ ] **1. Logging Estructurado**
+- [x] **0. Clean Architecture y SOLID en main.py**
 
-  - [ ] Crear módulo `src/utils/logger.py` con configuración de logging
-  - [ ] Agregar logging a operaciones internas (NO reemplazar `print()` de UI)
-  - [ ] Configurar niveles de log (DEBUG, INFO, WARNING, ERROR)
-  - [ ] Agregar logging a operaciones críticas (validaciones, errores internos)
-  - [ ] Configurar output a archivo (`app.log`) y consola solo para errores críticos
-  - [ ] Actualizar tests para verificar logs cuando sea necesario
-  - **Archivos a modificar:** `src/repository.py`, `src/validators.py`, `src/main.py` (NO `src/ui.py`)
-  - **Nota:** Mantener `print()` en `src/ui.py` para mensajes de usuario
+  - [x] Refactorizar `main.py` siguiendo principios SOLID
+  - [x] Separar responsabilidades en funciones pequeñas y específicas
+  - [x] Implementar Dependency Inversion usando Protocols
+  - [x] Separar logging técnico de output al usuario
+  - [x] Crear `UserOutputInterface` y `ConsoleOutput` para separación de capas
+  - [x] Usar `AppConfig` para configuración externa
+  - [x] Hacer funciones testeables mediante inyección de dependencias
+  - **Archivos creados/modificados:** `src/main.py`, `src/utils/output.py`, `src/config.py`, `src/interfaces.py`, `src/container.py`
+  - **Tiempo estimado:** 3-4 horas
+  - **Completado:** 2026-01-05
+
+- [x] **0.1. Dependency Injection Container**
+
+  - [x] Crear `ApplicationContainer` para gestión de dependencias
+  - [x] Implementar `ContainerProtocol` usando structural subtyping
+  - [x] Aplicar patrón Singleton para dependencias con estado
+  - [x] Refactorizar `DataLoaderDemo` para usar `ArbolRepository` Protocol
+  - [x] Actualizar tests para trabajar con el nuevo contenedor
+  - **Archivos creados/modificados:** `src/container.py`, `src/data_loader.py`, `src/interfaces.py`, `tests/test_main.py`
   - **Tiempo estimado:** 2-3 horas
+  - **Completado:** 2026-01-05
+
+- [x] **1. Logging Estructurado** (Parcialmente completado)
+
+  - [x] Crear módulo `src/utils/logger.py` con configuración de logging ✅
+  - [x] Separar logging técnico de output al usuario (UserOutputInterface) ✅
+  - [x] Configurar niveles de log (DEBUG, INFO, WARNING, ERROR) ✅
+  - [x] Agregar logging a operaciones críticas en main.py ✅
+  - [x] Configurar output a archivo (`logs/arbol_genealogico.log`) ✅
+  - [x] Actualizar tests para verificar logs cuando sea necesario ✅
+  - [ ] Agregar logging a operaciones internas en `src/repository.py`
+  - [ ] Agregar logging a validaciones en `src/validators.py`
+  - [ ] Documentar niveles de log en README
+  - **Archivos a modificar:** `src/repository.py`, `src/validators.py` (pendientes)
+  - **Archivos ya modificados:** `src/main.py`, `src/utils/output.py` ✅
+  - **Nota:** Separación de logging/output implementada. Pendiente: más logging interno.
+  - **Tiempo estimado:** 1-2 horas (restante)
+
 
 - [ ] **2. Excepciones Personalizadas**
 
@@ -178,20 +207,36 @@ Transformar el proyecto de un ejercicio bien implementado a un showcase profesio
 
 ## 📊 Progreso General
 
-**Total de tareas:** 15  
-**Completadas:** 4  
-**En progreso:** 0  
-**Pendientes:** 11
+**Total de tareas:** 17 (aumentado de 15)  
+**Completadas:** 7 (aumentado de 4)  
+**En progreso:** 1 (Logging Estructurado - parcial)
+**Pendientes:** 9
 
 **Progreso por prioridad:**
 
-- 🔴 Alta: 3/5 (60%)
+- 🔴 Alta: 5/7 (71%) - Mejorado de 60%
 - 🟡 Media: 1/5 (20%)
 - 🟢 Baja: 0/5 (0%)
 
 ---
 
 ## 📝 Notas de Implementación
+
+### Clean Architecture y SOLID
+
+- ✅ Implementado Dependency Injection Container siguiendo patrón Service Locator
+- ✅ Usado structural subtyping (Protocols) para Dependency Inversion
+- ✅ Separación clara entre logging técnico y output al usuario
+- ✅ `main.py` ahora es fácilmente testeable mediante inyección de dependencias
+- ✅ Funciones pequeñas y específicas, cada una con responsabilidad única
+- ✅ Configuración externa mediante `AppConfig.from_env()`
+
+### Dependency Injection
+
+- Container implementa patrón Singleton para dependencias con estado (ArbolGenealogico, DinastiaUI)
+- DataLoader es Transient (nueva instancia cada vez) por ser stateless
+- Protocols permiten flexibilidad sin acoplamiento a clases concretas
+- Estructural subtyping vs nominal subtyping explicado y aplicado
 
 ### Logging Estructurado
 
@@ -233,13 +278,6 @@ A medida que se implementen las mejoras, documentar:
 
 ---
 
-## 🔄 Proceso de Actualización
-
-1. Al comenzar una tarea, marcar como "En progreso" en el checklist
-2. Al completar, marcar como completada ✅
-3. Actualizar contadores de progreso
-4. Agregar notas si es necesario
-5. Commit con mensaje descriptivo: `feat: implementar [nombre de mejora]`
 
 ---
 

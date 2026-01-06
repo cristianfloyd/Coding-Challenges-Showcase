@@ -119,7 +119,7 @@ class ArbolRepository(Protocol):
         ...
 
 
-class DataLoader(Protocol):
+class DataLoaderProtocol(Protocol):
     """
     Protocolo para cargadores de datos.
 
@@ -127,7 +127,7 @@ class DataLoader(Protocol):
     datos iniciales en el árbol genealógico.
     """
 
-    def cargar_datos(self, arbol: ArbolRepository) -> None:
+    def cargar_datos(self, arbol: "ArbolRepository") -> None:
         """
         Carga datos en el árbol genealógico.
 
@@ -137,7 +137,7 @@ class DataLoader(Protocol):
         ...
 
 
-class UI(Protocol):
+class UIProtocol(Protocol):
     """
     Protocolo para la interfaz de usuario.
 

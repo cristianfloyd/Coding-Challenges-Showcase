@@ -36,8 +36,8 @@ class FamilyValidator:  # funcionará como validador de relaciones
             ValueError: Si la relación es inválida
         """
         logger.debug(
-            f"Validando relación '{relacion}': {persona1.nombre} (ID: {persona1.id}) <-> {persona2.nombre} (ID: {persona2.id})"
-        )  # noqa: E501
+            f"Validando relación '{relacion}': {persona1.nombre} (ID: {persona1.id}) <-> {persona2.nombre} (ID: {persona2.id})" # noqa: E501
+        )
 
         match relacion:
             case "eliminar_persona":
@@ -61,7 +61,7 @@ class FamilyValidator:  # funcionará como validador de relaciones
         # regla 1: no puede ser su propio padre
         if padre.id == hijo.id:
             logger.warning(
-                f"Intento de relación padre-hijo inválida: {padre.nombre} no puede ser su propio padre"
+                f"Intento de relación padre-hijo inválida: {padre.nombre} no puede ser su propio padre" # noqa: E501
             )
             raise ValueError(f"{padre.nombre} no puede ser su propio padre")
         # regla 2: maximo 2 padres
@@ -259,7 +259,7 @@ class FamilyValidator:  # funcionará como validador de relaciones
 
         if persona.hijos:
             logger.warning(
-                f"Intento de eliminar persona con descendientes: {persona.nombre} tiene {len(persona.hijos)} hijo(s)"
+                f"Intento de eliminar persona con descendientes: {persona.nombre} tiene {len(persona.hijos)} hijo(s)" # noqa: E501
             )
             raise ValueError(
                 f"ADVERTENCIA: {persona.nombre} tiene descendientes. "
