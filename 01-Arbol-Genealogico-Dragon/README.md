@@ -1,11 +1,13 @@
 # 🐉 Árbol Genealógico - Casa del Dragón
 
+[![CI/CD](https://github.com/cristianfloyd/Coding-Challenges-Showcase/workflows/Dragon%20CI%20(Challenge%2001)/badge.svg)](https://github.com/cristianfloyd/Coding-Challenges-Showcase/actions/workflows/ci-01-dragon.yml)
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![Tests](https://img.shields.io/badge/Tests-103%20passed-success.svg)](https://github.com)
 [![Coverage](https://img.shields.io/badge/Coverage-94%25-brightgreen.svg)](https://github.com)
 [![Code Style](https://img.shields.io/badge/Code%20Style-Ruff-black.svg)](https://github.com/astral-sh/ruff)
+[![Type Check](https://img.shields.io/badge/Type%20Check-Pyright%20Strict-blue.svg)](https://github.com/microsoft/pyright)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Architecture](https://img.shields.io/badge/Architecture-SOLID-orange.svg)](https://github.com)
-
 > Sistema de gestión de árboles genealógicos con validaciones complejas, implementado siguiendo principios **SOLID**, **Clean Code** y **Design Patterns**. Proyecto que demuestra competencia en arquitectura de software, testing exhaustivo y buenas prácticas de desarrollo.
 
 ## 🎯 Highlights para Reclutadores
@@ -195,7 +197,7 @@ def test_agregar_persona_exito(mock_error, mock_success, arbol_vacio):
 
 ```bash
 # Clonar repositorio
-git clone https://github.com/tu-usuario/arbol-genealogico-dragon.git
+git clone https://github.com/cristianfloyd/arbol-genealogico-dragon.git
 cd arbol-genealogico-dragon
 
 # Crear entorno virtual
@@ -285,9 +287,9 @@ Menu Principal
 
 **Cristian Arenas**
 
-- 🔗 GitHub: [@tu-usuario](https://github.com/tu-usuario)
+- 🔗 GitHub: [@cristianfloyd](https://github.com/cristianfloyd)
 - 💼 LinkedIn: [Tu perfil](https://linkedin.com/in/tu-perfil)
-- 📧 Email: tu-email@ejemplo.com
+- 📧 Email: cristianfloyd@gmail.comm
 
 ---
 
