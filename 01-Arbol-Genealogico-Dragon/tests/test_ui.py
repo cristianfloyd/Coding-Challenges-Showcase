@@ -14,11 +14,12 @@ Cubre todos los métodos de DinastiaUI:
 
 from unittest.mock import MagicMock, patch
 
+import pytest
+
 from src.exceptions import (
     ArbolGenealogicoError,
     EliminacionConDescendientesError,
     IDInvalidoError,
-
 )
 from src.repository import ArbolGenealogico
 from src.ui import DinastiaUI
@@ -877,3 +878,109 @@ class TestEliminarPersona:
             # No debería pedir confirmación, solo mostrar el error
             assert any("Error:" in str(call) for call in mock_print.call_args_list)
             assert any("Error genérico" in str(call) for call in mock_print.call_args_list)
+
+    @patch("src.ui.DinastiaUI.pedir_dato", return_value=1)
+    @patch("src.ui.UIMessages.error")
+    def test_eliminar_persona_error_critico_repositorio(
+        self,
+        mock_error: MagicMock,
+        mock_pedir_dato: MagicMock,
+        arbol_vacio: ArbolGenealogico,
+    ):
+        """Cubre líneas 289-292 (except ArbolGenealogicoError en eliminar_persona)"""
+        ui = DinastiaUI(arbol_vacio)
+        with patch.object(
+            arbol_vacio, "get_persona", side_effect=ArbolGenealogicoError("Error crítico")
+        ):
+            ui.eliminar_persona()
+            mock_error.assert_called_with("Error crítico")
+
+
+# ==================== TESTS PARA mostrar_menu_principal ====================
+
+
+class TestMenuPrincipal:
+    """Tests para el bucle principal del menú"""
+
+    @patch("builtins.input", side_effect=["8"])
+    @patch("src.ui.UIMessages.success")
+    def test_mostrar_menu_principal_salir(
+        self, mock_success: MagicMock, mock_input: MagicMock, arbol_vacio: ArbolGenealogico
+    ):
+        """Cubre líneas 37-41, 50-54, 69-71"""
+        ui = DinastiaUI(arbol_vacio)
+        ui.mostrar_menu_principal()
+        mock_success.assert_any_call("Bienvenido al sistema de árbol genealógico")
+
+    @patch("builtins.input", side_effect=["invalid", "8"])
+    @patch("builtins.print")
+    def test_mostrar_menu_principal_opcion_invalida(
+        self, mock_print: MagicMock, mock_input: MagicMock, arbol_vacio: ArbolGenealogico
+    ):
+        """Cubre líneas 72-74"""
+        ui = DinastiaUI(arbol_vacio)
+        ui.mostrar_menu_principal()
+        mock_print.assert_any_call("Opción invalida. Intente de nuevo.")
+
+    @pytest.mark.parametrize(
+        "opcion,metodo_mock",
+        [
+            ("1", "agregar_persona"),
+            ("2", "eliminar_persona"),
+            ("3", "buscar_persona"),
+            ("4", "mostrar_arbol"),
+            ("5", "agregar_hijo"),
+            ("6", "agregar_pareja"),
+            ("7", "eliminar_pareja"),
+        ],
+    )
+    def test_mostrar_menu_principal_opciones(
+        self, opcion: str, metodo_mock: str, arbol_vacio: ArbolGenealogico
+    ):
+        """Cubre todas las opciones del match en mostrar_menu_principal (líneas 56-68)"""
+        ui = DinastiaUI(arbol_vacio)
+        with patch.object(ui, metodo_mock) as mock_metodo:
+            with patch("builtins.input", side_effect=[opcion, "8"]):
+                ui.mostrar_menu_principal()
+                mock_metodo.assert_called_once()
+
+
+# ==================== TESTS DE ERRORES ADICIONALES ====================
+
+
+class TestUIDataErrors:
+    """Tests para capturar errores de ArbolGenealogicoError en UI"""
+
+    @patch("src.ui.SearchArbolVisitor")
+    @patch("src.ui.DinastiaUI.pedir_dato", return_value="Test")
+    @patch("src.ui.UIMessages.error")
+    def test_buscar_persona_error_generico(
+        self,
+        mock_error: MagicMock,
+        mock_pedir: MagicMock,
+        mock_visitor: MagicMock,
+        arbol_vacio: ArbolGenealogico,
+    ):
+        """Cubre líneas 119-121"""
+        ui = DinastiaUI(arbol_vacio)
+        # Forzar error al recorrer
+        with patch.object(
+            arbol_vacio,
+            "recorrer_arbol_completo",
+            side_effect=ArbolGenealogicoError("Error search"),
+        ):
+            ui.buscar_persona()
+            mock_error.assert_called_with("Error search")
+
+    @patch("src.ui.PrintArbolVisitor")
+    @patch("src.ui.UIMessages.error")
+    def test_mostrar_arbol_error_generico(
+        self, mock_error: MagicMock, mock_visitor: MagicMock, arbol_vacio: ArbolGenealogico
+    ):
+        """Cubre líneas 135-137"""
+        ui = DinastiaUI(arbol_vacio)
+        with patch.object(
+            arbol_vacio, "recorrer_arbol_completo", side_effect=ArbolGenealogicoError("Error print")
+        ):
+            ui.mostrar_arbol()
+            mock_error.assert_called_with("Error print")
