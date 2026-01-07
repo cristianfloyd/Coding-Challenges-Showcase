@@ -39,6 +39,10 @@ jobs:
           make lint
           make type-check
 
+      - name: Security Scanning
+        run: |
+          make security-scan
+
       - name: Run Tests with Coverage
         run: |
           pytest --cov=src --cov-report=json:coverage.json --cov-report=term-missing

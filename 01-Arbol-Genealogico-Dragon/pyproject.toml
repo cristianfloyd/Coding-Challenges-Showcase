@@ -11,6 +11,8 @@ dev = [
     "pytest-cov>=4.1.0",
     "ruff>=0.1.0",
     "pyright>=1.1.3",
+    "safety>=2.3.0",
+    "bandit[toml]>=1.7.0",
 ]
 
 [tool.pyright]
@@ -54,3 +56,16 @@ exclude_lines = [
     "if TYPE_CHECKING:",
     "@abstractmethod",
 ]
+
+[tool.bandit]
+# Configuración de Bandit para security scanning
+# Excluir tests y archivos de configuración
+exclude_dirs = ["tests", ".venv", "venv", "*.egg-info", "build", "dist"]
+# Nivel de confianza mínimo para reportar (1-5)
+confidence_level = 3
+# Nivel de severidad mínimo para reportar (1-5)
+severity_level = 3
+# Skips para código seguro conocido
+skips = ["B101", "B601"]  # B101: assert_used, B601: shell_injection_subprocess
+# Archivos a escanear
+targets = ["src"]

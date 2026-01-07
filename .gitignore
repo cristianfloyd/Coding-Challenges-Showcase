@@ -25,6 +25,9 @@ final_cov.txt
 .approval_tests_temp/
 htmlcov/
 
+# Security Scanning
+bandit-report.json
+
 # Formatting & Linting
 .ruff_cache/
 
