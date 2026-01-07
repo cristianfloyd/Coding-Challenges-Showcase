@@ -2,7 +2,7 @@
 
 Este documento describe el plan de mejoras para elevar el estándar del proyecto y asegurar prácticas de desarrollo profesional.
 
-**Última actualización:** 2026-01-05  
+**Última actualización:** 2026-01-05
 **Estado general:** 🟡 En progreso
 
 ---
@@ -207,8 +207,8 @@ Transformar el proyecto de un ejercicio bien implementado a un showcase profesio
 
 ## 📊 Progreso General
 
-**Total de tareas:** 17 (aumentado de 15)  
-**Completadas:** 8 (aumentado de 7)  
+**Total de tareas:** 17 (aumentado de 15)
+**Completadas:** 8 (aumentado de 7)
 **En progreso:** 0
 **Pendientes:** 9
 
