@@ -3,7 +3,7 @@
 [![CI/CD](https://github.com/cristianfloyd/Coding-Challenges-Showcase/actions/workflows/ci-01-dragon.yml/badge.svg)](https://github.com/cristianfloyd/Coding-Challenges-Showcase/actions/workflows/ci-01-dragon.yml)
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![Tests](https://img.shields.io/badge/Tests-155%20passed-success.svg)](https://github.com)
-[![Coverage](https://img.shields.io/badge/Coverage-94%25-brightgreen.svg)](https://github.com)
+[![Coverage](https://img.shields.io/badge/Coverage-95%25-brightgreen.svg)](https://github.com)
 [![Code Style](https://img.shields.io/badge/Code%20Style-Ruff-black.svg)](https://github.com/astral-sh/ruff)
 [![Type Check](https://img.shields.io/badge/Type%20Check-Pyright%20Strict-blue.svg)](https://github.com/microsoft/pyright)
 [![Security](https://img.shields.io/badge/Security-Bandit%20%2B%20Safety-blue.svg)](https://github.com/PyCQA/bandit)
@@ -18,10 +18,10 @@
 
 | Métrica | Valor | Significado |
 |---------|-------|-------------|
-| **Cobertura de Tests** | **94%** | Testing exhaustivo y profesional |
+| **Cobertura de Tests** | **95%** | Testing exhaustivo y profesional |
 | **Total de Tests** | **155** | Unitarios + Integración |
-| **Módulos con 100%** | **6 de 7** | Calidad de código excepcional |
-| **Líneas de Código** | **~540** | Proyecto de tamaño medio-complejo |
+| **Módulos con 100%** | **10+ de 15** | Calidad de código excepcional |
+| **Líneas de Código** | **~900** | Proyecto de tamaño medio-complejo |
 | **Design Patterns** | **3+** | Visitor, Repository, Factory, DI Container |
 | **Security Scanning** | **Bandit + Safety** | Análisis automático de vulnerabilidades |
 
@@ -150,8 +150,16 @@ Sistema completo de gestión de árboles genealógicos que permite:
 | `validators.py` | Reglas de negocio | **100%** ✅ | Perfecto |
 | `visitors.py` | Patrón Visitor | **100%** ✅ | Perfecto |
 | `data_loader.py` | Carga de datos | **100%** ✅ | Perfecto |
-| `main.py` | Orquestación | **100%** ✅ | Perfecto |
-| `ui.py` | Interfaz de usuario | **76%** ⚠️ | Bueno |
+| `container.py` | Dependency Injection | **100%** ✅ | Perfecto |
+| `interfaces.py` | Protocols/Interfaces | **100%** ✅ | Perfecto |
+| `utils/__init__.py` | Utilidades | **100%** ✅ | Perfecto |
+| `exceptions.py` | Excepciones personalizadas | **96%** ✅ | Excelente |
+| `ui.py` | Interfaz de usuario | **99%** ✅ | Excelente |
+| `utils/logger.py` | Sistema de logging | **82%** ✅ | Bueno |
+| `utils/ui_logger.py` | Logger para UI | **83%** ✅ | Bueno |
+| `config.py` | Configuración | **75%** ✅ | Bueno |
+| `main.py` | Orquestación | **65%** ⚠️ | Aceptable |
+| `utils/output.py` | Separación de output | **60%** ⚠️ | Aceptable |
 
 ### Decisiones de Diseño Clave
 
@@ -292,8 +300,8 @@ logger = LoggerConfig.setup_logger(
 
 **Resultados:**
 - ✅ **155 tests** pasando
-- ✅ **94% cobertura** total
-- ✅ **6 módulos** con 100% de cobertura
+- ✅ **95% cobertura** total
+- ✅ **10+ módulos** con 100% de cobertura
 - ✅ **13+ fixtures** reutilizables
 - ✅ **Tests unitarios** + **Tests de integración**
 - ✅ **Security scanning** integrado (Bandit: 0 issues)
@@ -424,12 +432,12 @@ Menu Principal
 
 ## 📊 Métricas del Proyecto
 
-- **Líneas de código**: ~540 (sin tests)
+- **Líneas de código**: ~900 (sin tests)
 - **Tests**: 155 (unitarios + integración)
-- **Cobertura**: 94%
-- **Módulos**: 12+ (src/ + utils/)
+- **Cobertura**: 95%
+- **Módulos**: 15+ (src/ + utils/)
 - **Clases**: 10+
-- **Funciones/Métodos**: 60+
+- **Funciones/Métodos**: 70+
 - **Design Patterns**: 4+ (Visitor, Repository, Factory, DI Container)
 - **Principios SOLID**: Todos aplicados completamente
 - **Security Issues**: 0 (Bandit scan)
@@ -441,7 +449,7 @@ Menu Principal
 1. **Refactorización de código monolítico**: Transformación de 300 líneas en arquitectura modular
 2. **Testing de UI interactiva**: Implementación de mocks complejos para `input()` y métodos estáticos
 3. **Algoritmos de validación**: Detección de ciclos temporales en grafos dirigidos
-4. **Cobertura del 100%**: Logro de cobertura completa en 6 de 7 módulos
+4. **Cobertura del 95%**: Logro de cobertura completa en 10+ módulos, con promedio general de 95%
 
 ### Mejores Prácticas Aplicadas
 
@@ -462,7 +470,7 @@ Menu Principal
 
 - 🔗 GitHub: [@cristianfloyd](https://github.com/cristianfloyd)
 - 💼 LinkedIn: [Tu perfil](https://linkedin.com/in/tu-perfil)
-- 📧 Email: ccristianfloyd@gmail.com
+- 📧 Email: cristianfloyd@gmail.com
 
 ---
 
