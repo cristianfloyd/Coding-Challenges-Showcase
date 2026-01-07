@@ -26,7 +26,7 @@ class ContainerProtocol(Protocol):
         Returns:
             ArbolRepository: Instancia del repositorio.
         """
-        ...
+        ...  # pragma: no cover
 
     def get_ui(self) -> "UIProtocol":
         """
@@ -35,7 +35,7 @@ class ContainerProtocol(Protocol):
         Returns:
             UI: Instancia de la interfaz de usuario.
         """
-        ...
+        ...  # pragma: no cover
 
     def get_data_loader(self) -> "DataLoaderProtocol":
         """
@@ -44,7 +44,7 @@ class ContainerProtocol(Protocol):
         Returns:
             DataLoader: Instancia del cargador de datos.
         """
-        ...
+        ...  # pragma: no cover
 
 
 class ApplicationContainer:

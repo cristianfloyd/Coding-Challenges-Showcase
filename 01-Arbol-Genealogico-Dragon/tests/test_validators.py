@@ -1,4 +1,4 @@
-from unittest.mock import Mock
+from unittest.mock import Mock, PropertyMock
 
 import pytest
 
@@ -161,7 +161,9 @@ def test_validar_pareja_bloquea_incesto_padre_hijo(validador_vacio: FamilyValida
     with pytest.raises(RelacionIncestuosaError) as e:
         validador_vacio.validar(maria, juan, "pareja")
 
-    assert f"{juan.nombre} y {maria.nombre} no pueden ser pareja porque son padre-hijo" in str(e.value)
+    assert f"{juan.nombre} y {maria.nombre} no pueden ser pareja porque son padre-hijo" in str(
+        e.value
+    )
     assert e.value.tipo_relacion == "pareja"
 
 
@@ -485,3 +487,35 @@ def test_validar_dispatcher_eliminar_persona(validador_vacio: FamilyValidator):
     persona = Mock(nombre="Borrar", hijos=[])
     # Aquí llamamos a validar(), que internamente ejecutará la línea 33
     validador_vacio.validar(persona, Mock(), "eliminar_persona")
+
+
+def test_validar_remover_pareja_captura_value_error(validador_vacio: FamilyValidator):
+    """
+    Test: Cubre el bloque except ValueError en _validar_remover_pareja
+
+    Escenario:
+    - Se intenta validar la remoción de pareja
+    - Al acceder a pareja.id se lanza un ValueError
+    - El bloque except ValueError debe capturarlo y relanzarlo con contexto
+
+    Resultado: Se lanza ValueError con mensaje descriptivo
+    """
+    # ARRANGE
+    validator = validador_vacio
+    mock_persona1 = Mock(id=1, nombre="Persona 1")
+    mock_persona2 = Mock(id=2, nombre="Persona 2")
+
+    # Configurar pareja para que lance ValueError al acceder a .id
+    mock_pareja1 = Mock()
+    type(mock_pareja1).id = PropertyMock(side_effect=ValueError("Error al acceder al ID"))
+    mock_persona1.pareja = mock_pareja1
+
+    mock_pareja2 = Mock()
+    mock_pareja2.id = 1  # Configuramos el id normalmente para pasar la primera validación
+    mock_persona2.pareja = mock_pareja2
+
+    # ACT & ASSERT
+    with pytest.raises(ValueError) as e:
+        validator.validar(mock_persona1, mock_persona2, "remover_pareja")
+
+    assert "Error al validar remover pareja" in str(e.value)
