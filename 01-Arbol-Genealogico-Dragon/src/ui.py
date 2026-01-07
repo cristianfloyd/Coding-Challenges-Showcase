@@ -1,5 +1,10 @@
 from typing import TYPE_CHECKING, Literal, overload
 
+from .exceptions import (
+    ArbolGenealogicoError,
+    EliminacionConDescendientesError,
+    PersonaNoEncontradaError,
+)
 from .repository import ArbolGenealogico
 from .utils.ui_logger import create_ui_logger
 from .visitors import PrintArbolVisitor, SearchArbolVisitor
@@ -84,7 +89,7 @@ class DinastiaUI:
             _ui_logger.success(
                 f"Persona registrada: {nuevo_registro.nombre} (ID: {nuevo_registro.id})"
             )
-        except ValueError as e:
+        except ArbolGenealogicoError as e:
             UIMessages.error(str(e))
             _ui_logger.error(f"Error al registrar persona: {e}")
 
@@ -111,7 +116,7 @@ class DinastiaUI:
                 for r in resultados:
                     UIMessages.success(f"- {r.nombre} ({r.id})")
                     _ui_logger.debug(f"Resultado encontrado: {r.nombre} (ID: {r.id})")
-        except ValueError as e:
+        except ArbolGenealogicoError as e:
             UIMessages.error(str(e))
             _ui_logger.error(f"Error en búsqueda: {e}")
 
@@ -127,7 +132,7 @@ class DinastiaUI:
             resultado = visitor.get_resultado()
             UIMessages.success(resultado)
             _ui_logger.info("Árbol mostrado exitosamente")
-        except ValueError as e:
+        except ArbolGenealogicoError as e:
             UIMessages.error(str(e))
             _ui_logger.error(f"Error al mostrar árbol: {e}")
 
@@ -149,11 +154,15 @@ class DinastiaUI:
             self.arbol.add_hijo(padre, hijo)
             UIMessages.success(f"Ahora {padre.nombre} es padre de {hijo.nombre}")
             _ui_logger.success(f"Relación padre-hijo creada: {padre.nombre} -> {hijo.nombre}")
-        except ValueError as e:
+        except (PersonaNoEncontradaError, ArbolGenealogicoError) as e:
             UIMessages.error(str(e))
             _ui_logger.error(f"Error al agregar hijo: {e}")
 
     def agregar_pareja(self):
+        """
+        Solicita IDs de dos personas y establece la relación de pareja entre ellas.
+        Maneja errores de validación y muestra mensajes de éxito o error.
+        """
         try:
             persona1_id = self.pedir_dato(
                 mensaje="Ingrese el ID de la primera persona: ", es_entero=True
@@ -172,7 +181,7 @@ class DinastiaUI:
             _ui_logger.success(
                 f"Relación de pareja creada: {persona1.nombre} <-> {persona2.nombre}"
             )
-        except ValueError as e:
+        except (PersonaNoEncontradaError, ArbolGenealogicoError) as e:
             UIMessages.error(str(e))
             _ui_logger.error(f"Error al agregar pareja: {e}")
 
@@ -226,7 +235,7 @@ class DinastiaUI:
             _ui_logger.success(
                 f"Relación de pareja eliminada: {persona1.nombre} <-> {persona2.nombre}"
             )
-        except ValueError as e:
+        except (PersonaNoEncontradaError, ArbolGenealogicoError) as e:
             UIMessages.error(str(e))
             _ui_logger.error(f"Error al eliminar pareja: {e}")
 
@@ -234,6 +243,9 @@ class DinastiaUI:
         """
         Solicita un ID de persona y elimina la persona del árbol.
         Maneja errores de validación y muestra mensajes de éxito o error.
+
+        Si la persona tiene descendientes, solicita confirmación al usuario
+        antes de proceder con la eliminación.
         """
         try:
             id_persona = self.pedir_dato("Ingrese el ID de la persona a eliminar: ", True)
@@ -244,31 +256,38 @@ class DinastiaUI:
                 self.arbol.eliminar_persona(id_persona)
                 UIMessages.success(f"Persona {persona.nombre} eliminada exitosamente.")
                 _ui_logger.success(f"Persona eliminada: {persona.nombre} (ID: {id_persona})")
-            except ValueError as e:
-                mensaje_error = str(e)
-                if "ADVERTENCIA" in mensaje_error:
-                    UIMessages.error(f"\n{mensaje_error}")
-                    _ui_logger.warning(
-                        f"Advertencia al eliminar persona {persona.nombre}: {mensaje_error}"
+            except EliminacionConDescendientesError as e:
+                # Manejo específico para eliminación con descendientes
+                # Muestra advertencia y solicita confirmación
+                UIMessages.error(f"\n{str(e)}")
+                _ui_logger.warning(
+                    f"Advertencia al eliminar persona {e.persona_nombre}: "
+                    f"tiene {e.cantidad_hijos} hijo(s)"
+                )
+                confirma = input("Desea continuar? (s/n): ").strip().lower()
+                if confirma == "s":
+                    confirma = True
+                    self.arbol.eliminar_persona(id_persona, confirma)
+                    UIMessages.success(f"Persona {persona.nombre} eliminada exitosamente.")
+                    _ui_logger.success(
+                        f"Persona eliminada con confirmación: {persona.nombre} (ID: {id_persona})"
                     )
-                    confirma = input("Desea continuar? (s/n): ").strip().lower()
-                    if confirma == "s":
-                        confirma = True
-                        self.arbol.eliminar_persona(id_persona, confirma)
-                        UIMessages.success(f"Persona {persona.nombre} eliminada exitosamente.")
-                        _ui_logger.success(
-                            f"Persona eliminada con confirmación: {persona.nombre} (ID: {id_persona})" # noqa: E501
-                        )
-                    else:
-                        UIMessages.error("Operación cancelada.")
-                        _ui_logger.info(
-                            f"Eliminación de persona {persona.nombre} cancelada por el usuario"
-                        )
                 else:
-                    UIMessages.error(str(e))
-                    _ui_logger.error(f"Error al eliminar persona: {e}")
+                    UIMessages.error("Operación cancelada.")
+                    _ui_logger.info(
+                        f"Eliminación de persona {persona.nombre} cancelada por el usuario"
+                    )
+            except ArbolGenealogicoError as e:
+                # Otros errores del sistema
+                UIMessages.error(str(e))
+                _ui_logger.error(f"Error al eliminar persona: {e}")
 
-        except ValueError as e:
+        except PersonaNoEncontradaError as e:
+            # Error al obtener la persona (no existe)
+            UIMessages.error(str(e))
+            _ui_logger.error(f"Error al obtener persona para eliminar: {e}")
+        except ArbolGenealogicoError as e:
+            # Cualquier otro error del sistema
             UIMessages.error(str(e))
             _ui_logger.error(f"Error al obtener persona para eliminar: {e}")
 

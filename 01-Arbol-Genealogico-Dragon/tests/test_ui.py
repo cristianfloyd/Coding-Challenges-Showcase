@@ -14,6 +14,12 @@ Cubre todos los métodos de DinastiaUI:
 
 from unittest.mock import MagicMock, patch
 
+from src.exceptions import (
+    ArbolGenealogicoError,
+    EliminacionConDescendientesError,
+    IDInvalidoError,
+
+)
 from src.repository import ArbolGenealogico
 from src.ui import DinastiaUI
 
@@ -205,7 +211,7 @@ class TestAgregarPersona:
         ui = DinastiaUI(arbol_vacio)
         error_msg = "Error de validación"
 
-        with patch.object(arbol_vacio, "registrar_persona", side_effect=ValueError(error_msg)):
+        with patch.object(arbol_vacio, "registrar_persona", side_effect=IDInvalidoError(error_msg)):
             # ACT
             ui.agregar_persona()
 
@@ -579,7 +585,7 @@ class TestEliminarPareja:
 
         # ASSERT
         mock_error.assert_called_once()
-        assert "Error" in str(mock_error.call_args[0][0])
+        assert "no tiene pareja" in str(mock_error.call_args[0][0])
         mock_success.assert_not_called()
 
     @patch("src.ui.DinastiaUI.pedir_dato", side_effect=[999, 1])
@@ -762,7 +768,7 @@ class TestEliminarPersona:
             arbol_vacio,
             "eliminar_persona",
             side_effect=[
-                ValueError("ADVERTENCIA: tiene descendientes"),
+                EliminacionConDescendientesError("Persona 1", 2),
                 None,  # Segunda llamada (con confirmación) no lanza error
             ],
         ):
@@ -797,7 +803,7 @@ class TestEliminarPersona:
             arbol_con_datos,
             "eliminar_persona",
             side_effect=[
-                ValueError("ADVERTENCIA: tiene descendientes"),
+                EliminacionConDescendientesError("Persona 1", 1),
                 None,
             ],
         ):
@@ -832,7 +838,7 @@ class TestEliminarPersona:
             arbol_con_datos,
             "eliminar_persona",
             side_effect=[
-                ValueError("ADVERTENCIA: tiene descendientes"),
+                EliminacionConDescendientesError("Persona 1", 1),
                 None,
             ],
         ):
@@ -862,11 +868,12 @@ class TestEliminarPersona:
 
         # Simular error sin ADVERTENCIA
         with patch.object(
-            arbol_vacio, "eliminar_persona", side_effect=ValueError("Error genérico")
+            arbol_vacio, "eliminar_persona", side_effect=ArbolGenealogicoError("Error genérico")
         ):
             # ACT
             ui.eliminar_persona()
 
             # ASSERT
             # No debería pedir confirmación, solo mostrar el error
-            mock_print.assert_called_with("Error: Error genérico")
+            assert any("Error:" in str(call) for call in mock_print.call_args_list)
+            assert any("Error genérico" in str(call) for call in mock_print.call_args_list)

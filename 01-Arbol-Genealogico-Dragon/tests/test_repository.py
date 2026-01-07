@@ -4,6 +4,14 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from src.exceptions import (
+    CicloTemporalError,
+    EliminacionConDescendientesError,
+    IDInvalidoError,
+    ParejaNoExisteError,
+    PersonaNoEncontradaError,
+    RelacionInvalidaError,
+)
 from src.models import Persona
 from src.repository import ArbolGenealogico
 from src.visitors import PrintArbolVisitor, SearchArbolVisitor
@@ -39,13 +47,13 @@ def test_registrar_persona_lanza_error_si_validacion_falla(
     Verifica que registrar_persona() lanza ValueError si la validacion falla.
     """
     # ARRANGE
-    mock_validar_id.side_effect = ValueError("ID INVALIDO")
+    mock_validar_id.side_effect = IDInvalidoError("ID INVALIDO")
 
     # ACT & ASSERT
-    with pytest.raises(ValueError) as exc_info:
+    with pytest.raises(IDInvalidoError) as exc_info:
         arbol_vacio.registrar_persona("Persona No Valida")
 
-    assert "Error al registrar persona: ID INVALIDO" in str(exc_info.value)
+    assert "ID INVALIDO" in str(exc_info.value)
 
 
 def test_registrar_persona_genera_ids_secuenciales(arbol_vacio: ArbolGenealogico):
@@ -112,10 +120,10 @@ def test_get_persona_no_existe(arbol_vacio: ArbolGenealogico):
     persona_id_inexistente = 999
 
     # ACT & ASSERT
-    with pytest.raises(ValueError) as exc_info:
+    with pytest.raises(PersonaNoEncontradaError) as exc_info:
         arbol_vacio.get_persona(persona_id_inexistente)
 
-    assert f"Persona con ID {persona_id_inexistente} no encontrada" in str(exc_info.value)
+    assert exc_info.value.persona_id == persona_id_inexistente
 
 
 # ==================== TESTS PARA init_get_root ====================
@@ -293,10 +301,10 @@ def test_add_hijo_lanza_error_si_validacion_falla(arbol_vacio: ArbolGenealogico)
 
     # ACT & ASSERT
     # Intentar que una persona sea su propio padre (ciclo)
-    with pytest.raises(ValueError) as exc_info:
+    with pytest.raises(RelacionInvalidaError) as exc_info:
         arbol_vacio.add_hijo(persona, persona)
 
-    assert "Error al añadir hijo" in str(exc_info.value)
+    assert f"{persona.nombre} no puede ser su propio padre" in str(exc_info.value)
 
 
 def test_add_hijo_bloquea_ciclo_temporal(arbol_vacio: ArbolGenealogico):
@@ -312,10 +320,10 @@ def test_add_hijo_bloquea_ciclo_temporal(arbol_vacio: ArbolGenealogico):
 
     # ACT & ASSERT
     # Intentar que el padre sea padre del abuelo (ciclo)
-    with pytest.raises(ValueError) as exc_info:
+    with pytest.raises(CicloTemporalError) as exc_info:
         arbol_vacio.add_hijo(padre, abuelo)
 
-    assert "Error al añadir hijo" in str(exc_info.value)
+    assert "Paradoja temporal" in str(exc_info.value)
 
 
 # ==================== TESTS PARA add_pareja ====================
@@ -350,10 +358,10 @@ def test_add_pareja_lanza_error_si_validacion_falla(arbol_vacio: ArbolGenealogic
 
     # ACT & ASSERT
     # Intentar que una persona sea su propia pareja
-    with pytest.raises(ValueError) as exc_info:
+    with pytest.raises(RelacionInvalidaError) as exc_info:
         arbol_vacio.add_pareja(persona, persona)
 
-    assert "Error al añadir pareja" in str(exc_info.value)
+    assert "no puede ser su propia pareja" in str(exc_info.value)
 
 
 def test_add_pareja_bloquea_si_ya_tiene_pareja(arbol_vacio: ArbolGenealogico):
@@ -370,10 +378,10 @@ def test_add_pareja_bloquea_si_ya_tiene_pareja(arbol_vacio: ArbolGenealogico):
 
     # ACT & ASSERT
     # Intentar agregar una segunda pareja
-    with pytest.raises(ValueError) as exc_info:
+    with pytest.raises(RelacionInvalidaError) as exc_info:
         arbol_vacio.add_pareja(persona1, persona3)
 
-    assert "Error al añadir pareja" in str(exc_info.value)
+    assert "ya tiene una pareja" in str(exc_info.value)
 
 
 # ==================== TESTS PARA remove_pareja ====================
@@ -412,10 +420,10 @@ def test_remove_pareja_lanza_error_si_validacion_falla(arbol_vacio: ArbolGenealo
     # No son parejas
 
     # ACT & ASSERT
-    with pytest.raises(ValueError) as exc_info:
+    with pytest.raises(ParejaNoExisteError) as exc_info:
         arbol_vacio.remove_pareja(persona1, persona2)
 
-    assert "Error al remover pareja" in str(exc_info.value)
+    assert f"{persona1.nombre} y {persona2.nombre} no tiene pareja" in str(exc_info.value)
 
 
 # ==================== TESTS PARA eliminar_persona ====================
@@ -436,7 +444,7 @@ def test_eliminar_persona_exito(arbol_con_persona_simple: ArbolGenealogico):
 
     # ASSERT
     assert persona_id not in arbol_con_persona_simple.personas
-    with pytest.raises(ValueError):
+    with pytest.raises(PersonaNoEncontradaError):
         arbol_con_persona_simple.get_persona(persona_id)
 
 
@@ -450,7 +458,7 @@ def test_eliminar_persona_no_existe(arbol_vacio: ArbolGenealogico):
     persona_id_inexistente = 999
 
     # ACT & ASSERT
-    with pytest.raises(ValueError) as exc_info:
+    with pytest.raises(PersonaNoEncontradaError) as exc_info:
         arbol_vacio.eliminar_persona(persona_id_inexistente)
 
     assert f"Persona con ID {persona_id_inexistente} no encontrada" in str(exc_info.value)
@@ -584,7 +592,7 @@ def test_eliminar_persona_lanza_error_si_tiene_hijos(arbol_con_datos: ArbolGenea
     assert len(padre.hijos) > 0
 
     # ACT & ASSERT
-    with pytest.raises(ValueError) as exc_info:
+    with pytest.raises(EliminacionConDescendientesError) as exc_info:
         arbol_con_datos.eliminar_persona(padre.id, confirmar_rotura=False)
 
     assert "tiene descendientes" in str(exc_info.value)

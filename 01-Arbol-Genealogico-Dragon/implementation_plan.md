@@ -62,15 +62,16 @@ Transformar el proyecto de un ejercicio bien implementado a un showcase profesio
   - **Nota:** Separación de logging/output implementada. Pendiente: más logging interno.
 
 
-- [ ] **2. Excepciones Personalizadas**
+- [x] **2. Excepciones Personalizadas**
 
-  - [ ] Crear `src/exceptions.py` con jerarquía de excepciones
-  - [ ] Definir: `ArbolGenealogicoError`, `PersonaNoEncontradaError`, `ValidacionError`, `RelacionInvalidaError`
-  - [ ] Reemplazar `ValueError` genéricos por excepciones específicas
-  - [ ] Actualizar documentación de excepciones en docstrings
-  - [ ] Actualizar tests para verificar excepciones correctas
-  - **Archivos a modificar:** `src/exceptions.py` (nuevo), `src/repository.py`, `src/validators.py`, `src/ui.py`
+  - [x] Crear `src/exceptions.py` con jerarquía de excepciones ✅
+  - [x] Definir: `ArbolGenealogicoError`, `PersonaNoEncontradaError`, `ValidacionError`, `RelacionInvalidaError` ✅
+  - [x] Reemplazar `ValueError` genéricos por excepciones específicas ✅
+  - [x] Actualizar documentación de excepciones en docstrings ✅
+  - [x] Actualizar tests para verificar excepciones correctas ✅
+  - **Archivos modificados:** `src/exceptions.py` (nuevo), `src/repository.py`, `src/validators.py`, `src/ui.py`, `tests/test_validators.py`, `tests/test_repository.py`, `tests/test_ui.py`
   - **Tiempo estimado:** 1-2 horas
+  - **Completado:** 2026-01-07
 
 - [x] **3. Archivo LICENSE**
 
@@ -207,13 +208,13 @@ Transformar el proyecto de un ejercicio bien implementado a un showcase profesio
 ## 📊 Progreso General
 
 **Total de tareas:** 17 (aumentado de 15)  
-**Completadas:** 7 (aumentado de 4)  
-**En progreso:** 1 (Logging Estructurado - parcial)
+**Completadas:** 8 (aumentado de 7)  
+**En progreso:** 0
 **Pendientes:** 9
 
 **Progreso por prioridad:**
 
-- 🔴 Alta: 5/7 (71%) - Mejorado de 60%
+- 🔴 Alta: 6/7 (86%) - Mejorado de 71%
 - 🟡 Media: 1/5 (20%)
 - 🟢 Baja: 0/5 (0%)
 
@@ -249,9 +250,12 @@ Transformar el proyecto de un ejercicio bien implementado a un showcase profesio
 
 ### Excepciones Personalizadas
 
-- Mantener compatibilidad con código existente
-- Considerar crear excepciones específicas para cada tipo de validación
-- Documentar jerarquía de excepciones
+- ✅ Implementada jerarquía completa de excepciones en `src/exceptions.py`
+- ✅ Excepciones específicas: `PersonaNoEncontradaError`, `IDInvalidoError`, `RelacionInvalidaError`, `CicloTemporalError`, `LimitePadresExcedidoError`, `RelacionIncestuosaError`, `ParejaNoExisteError`, `EliminacionConDescendientesError`
+- ✅ Reemplazados todos los `ValueError` genéricos por excepciones específicas
+- ✅ Actualizados todos los tests para usar las nuevas excepciones
+- ✅ Documentación en docstrings actualizada con `Raises:` clauses
+- ✅ Jerarquía de excepciones documentada en `src/exceptions.py`
 
 ### Pre-commit Hooks
 

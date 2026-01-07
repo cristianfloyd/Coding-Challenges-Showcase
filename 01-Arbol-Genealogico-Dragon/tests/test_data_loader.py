@@ -4,6 +4,11 @@ from unittest.mock import patch
 import pytest
 
 from src.data_loader import DataLoaderDemo
+from src.exceptions import (
+    ArbolGenealogicoError,
+    ParejaNoExisteError,
+    PersonaNoEncontradaError,
+)
 from src.models import Persona
 
 if TYPE_CHECKING:
@@ -100,7 +105,9 @@ def test_remover_pareja_seguro_maneja_error(arbol_vacio: "ArbolRepository"):
     persona1.pareja = persona2  # Simular que son parejas
 
     # Simular que remove_pareja lanza un error
-    with patch.object(arbol_vacio, "remove_pareja", side_effect=ValueError("Error inesperado")):
+    with patch.object(
+        arbol_vacio, "remove_pareja", side_effect=ParejaNoExisteError(persona1, persona2)
+    ):
         # ACT
         loader._remover_pareja_seguro(arbol_vacio, persona1, persona2)  # type: ignore
 
@@ -120,7 +127,7 @@ def test_get_persona_lanza_error_si_no_existe(arbol_vacio: "ArbolRepository"):
     arbol_vacio.registrar_persona("Persona Existente")
 
     # ACT & ASSERT
-    with pytest.raises(ValueError) as exc_info:
+    with pytest.raises(PersonaNoEncontradaError) as exc_info:
         loader._get_persona(arbol_vacio, "Persona Inexistente")  # type: ignore
 
     assert "Persona 'Persona Inexistente' no encontrada" in str(exc_info.value)

@@ -2,6 +2,16 @@ from unittest.mock import Mock
 
 import pytest
 
+from src.exceptions import (
+    CicloTemporalError,
+    EliminacionConDescendientesError,
+    IDInvalidoError,
+    LimitePadresExcedidoError,
+    ParejaNoExisteError,
+    PersonaNoEncontradaError,
+    RelacionIncestuosaError,
+    RelacionInvalidaError,
+)
 from src.validators import FamilyValidator
 
 
@@ -69,7 +79,7 @@ def test_validar_pareja_fallido(validador_vacio: FamilyValidator):
     # ═══════════════════════════════════════════════════
     # ACT (Actuar)
     # ═══════════════════════════════════════════════════
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(RelacionInvalidaError) as e:
         validator.validar(mock_persona1, mock_persona1, "pareja")
 
     # ═══════════════════════════════════════════════════
@@ -97,7 +107,7 @@ def test_validar_pareja_falla_si_persona1_tiene_pareja(
     # ═══════════════════════════════════════════════════
     # ACT (Actuar)
     # ═══════════════════════════════════════════════════
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(RelacionInvalidaError) as e:
         validator.validar(mock_persona1, mock_persona2, "pareja")
 
     # ═══════════════════════════════════════════════════
@@ -121,7 +131,7 @@ def test_validar_pareja_falla_si_persona2_tiene_pareja(
     mock_persona1 = Mock(id=1, nombre="Persona 1", pareja=None)
     mock_persona2 = Mock(id=2, nombre="Persona 2", pareja=mock_persona1)
 
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(RelacionInvalidaError) as e:
         validator.validar(mock_persona1, mock_persona2, "pareja")
 
     assert (
@@ -145,14 +155,14 @@ def test_validar_pareja_bloquea_incesto_padre_hijo(validador_vacio: FamilyValida
     maria = Mock(id=2, nombre="María", padres=[juan, None], pareja=None)
 
     # ACT & ASSERT
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(RelacionIncestuosaError) as e:
         validador_vacio.validar(juan, maria, "pareja")
     # Verificar si persona2 es padre/madre de persona1
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(RelacionIncestuosaError) as e:
         validador_vacio.validar(maria, juan, "pareja")
 
-    assert "es padre/madre de" in str(e.value)
-    assert f"{juan.nombre} es padre/madre de {maria.nombre}. " in str(e.value)
+    assert f"{juan.nombre} y {maria.nombre} no pueden ser pareja porque son padre-hijo" in str(e.value)
+    assert e.value.tipo_relacion == "pareja"
 
 
 # ═══════════════════════════════════════════════════
@@ -201,7 +211,7 @@ def test_validar_id_casos_error(
     validator = validador_con_persona
 
     # ACT
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(IDInvalidoError) as e:
         validator.validar_id(id_input)
 
     # ASSERT
@@ -236,10 +246,11 @@ def test_validar_remover_pareja_fallido(validador_vacio: FamilyValidator):
     nombre1 = mock_persona1.nombre
     nombre2 = mock_persona2.nombre
 
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(ParejaNoExisteError) as e:
         validator.validar(mock_persona1, mock_persona2, "remover_pareja")
 
-    assert str(e.value) == f"Error al validar remover pareja: {nombre1} y {nombre2} no son pareja"
+    assert f"{nombre1} y {nombre2} no son pareja" in str(e.value)
+    assert e.value.tipo_relacion == "pareja"
 
 
 def test_validar_remover_pareja_fallido_uno_no_tiene_pareja(
@@ -254,10 +265,11 @@ def test_validar_remover_pareja_fallido_uno_no_tiene_pareja(
     mock_persona2 = Mock(id=2, nombre="Persona 2", pareja=mock_persona1)
     nombre1 = mock_persona1.nombre
     nombre2 = mock_persona2.nombre
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(ParejaNoExisteError) as e:
         validator.validar(mock_persona1, mock_persona2, "remover_pareja")
 
-    assert str(e.value) == f"Error al validar remover pareja: {nombre1} o {nombre2} no tiene pareja"
+    assert f"{nombre1} y {nombre2} no tiene pareja" in str(e.value)
+    assert e.value.tipo_relacion == "pareja"
 
 
 # ================= validar_hijo start =================
@@ -323,10 +335,11 @@ def test_validar_hijo_detecta_ciclo_simple(validador_vacio: FamilyValidator):
     abuelo = Mock(id=1, nombre="Abuelo", padres=[None, None])
     padre = Mock(id=2, nombre="Padre", padres=[abuelo, None])
 
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(CicloTemporalError) as e:
         validador_vacio.validar(padre, abuelo, "hijo")
 
-    assert "Paradoja temporal" in str(e.value)
+    assert f"{abuelo.nombre} es ancestro de {padre.nombre}" in str(e.value)
+    assert e.value.tipo_relacion == "padre-hijo"
 
 
 def test_validar_hijo_no_puede_ser_su_propio_padre(validador_vacio: FamilyValidator):
@@ -336,10 +349,11 @@ def test_validar_hijo_no_puede_ser_su_propio_padre(validador_vacio: FamilyValida
     """
     persona = Mock(id=1, nombre="Persona", padres=[None, None])
 
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(RelacionInvalidaError) as e:
         validador_vacio.validar(persona, persona, "hijo")
 
     assert f"{persona.nombre} no puede ser su propio padre" in str(e.value)
+    assert e.value.tipo_relacion == "padre-hijo"
 
 
 def test_validar_hijo_maximo_2_padres(validador_vacio: FamilyValidator):
@@ -353,10 +367,11 @@ def test_validar_hijo_maximo_2_padres(validador_vacio: FamilyValidator):
     persona = Mock(id=3, nombre="Persona", padres=[None, None])
     hijo = Mock(id=4, nombre="hijo", padres=[padre, madre])
 
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(LimitePadresExcedidoError) as e:
         validador_vacio.validar(persona, hijo, "hijo")
 
-    assert "La persona ya tiene 2 padres" in str(e.value)
+    assert "ya tiene 2 padres" in str(e.value)
+    assert e.value.tipo_relacion == "padre-hijo"
 
 
 def test_validar_hijo_bloquea_si_ya_son_pareja(validador_vacio: FamilyValidator):
@@ -378,14 +393,15 @@ def test_validar_hijo_bloquea_si_ya_son_pareja(validador_vacio: FamilyValidator)
     jose.pareja = pepe
     pepe.pareja = None
 
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(RelacionIncestuosaError) as e:
         validador_vacio.validar(juan, maria, "hijo")
 
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(RelacionIncestuosaError) as e:
         validador_vacio.validar(jose, pepe, "hijo")
 
-    assert "no puede ser hijo de" in str(e.value)
-    assert f"{pepe.nombre} no puede ser hijo de {jose.nombre} porque son pareja" == str(e.value)
+    assert f"{jose.nombre} y {pepe.nombre} no pueden ser padre-hijo porque son pareja" == str(
+        e.value
+    )
 
 
 def test_validar_hijo_detecta_ciclo_tres_generaciones(validador_vacio: FamilyValidator):
@@ -402,7 +418,7 @@ def test_validar_hijo_detecta_ciclo_tres_generaciones(validador_vacio: FamilyVal
     nieto = Mock(id=3, nombre="Nieto", padres=[padre, None])
 
     # Intentamos cerrar el ciclo: Nieto -> padre de Abuelo
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(CicloTemporalError) as e:
         validador_vacio.validar(nieto, abuelo, "hijo")
 
     assert "Paradoja temporal" in str(e.value)
@@ -427,7 +443,7 @@ def test_validar_impacto_eliminacion_error_si_tiene_hijos():
     )  # Mockeamos que tiene hijos
 
     # ACT & ASSERT
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(EliminacionConDescendientesError) as e:
         FamilyValidator.validar_impacto_eliminacion(persona_con_hijos)
 
     assert "tiene descendientes" in str(e.value)
@@ -457,10 +473,11 @@ def test_validar_relacion_desconocida(validador_vacio: FamilyValidator):
     - Persona se desconoce la relacion con otra persona
     Resultado: ERROR (relacion desconocida)
     """
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(RelacionInvalidaError) as e:
         validador_vacio.validar(Mock(), Mock(), "relacion_desconocida")
 
-    assert "Relacion no valida" in str(e.value)
+    assert "Tipo de relación inválida" in str(e.value)
+    assert e.value.tipo_relacion == "relacion_desconocida"
 
 
 def test_validar_dispatcher_eliminar_persona(validador_vacio: FamilyValidator):

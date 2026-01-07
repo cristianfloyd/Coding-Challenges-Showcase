@@ -5,6 +5,12 @@ from .models import Persona
 if TYPE_CHECKING:
     from .interfaces import ArbolRepository
 
+from .exceptions import (
+    ArbolGenealogicoError,
+    ParejaNoExisteError,
+    PersonaNoEncontradaError,
+)
+
 # Para type hints usamos el Protocol, pero en runtime puede ser cualquier implementación
 from .interfaces import ArbolRepository
 
@@ -43,7 +49,7 @@ class DataLoaderDemo:
         try:
             if persona1.pareja and persona1.pareja.id == persona2.id:
                 arbol.remove_pareja(persona1, persona2)
-        except ValueError:
+        except (ParejaNoExisteError, ArbolGenealogicoError):
             pass
 
     def _get_persona(self, arbol: "ArbolRepository", nombre: str) -> Persona:
@@ -51,7 +57,10 @@ class DataLoaderDemo:
         for p in arbol.personas.values():
             if p.nombre == nombre:
                 return p
-        raise ValueError(f"Error interno: Persona '{nombre}' no encontrada durante la carga.")
+        raise PersonaNoEncontradaError(
+            persona_id=None,
+            message=f"Error interno: Persona '{nombre}' no encontrada durante la carga."
+        )
 
     def _cargar_generacion_aegon_i(self, arbol: "ArbolRepository") -> None:
         # Aegon I y sus esposas

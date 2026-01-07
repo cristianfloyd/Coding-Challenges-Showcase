@@ -1,5 +1,12 @@
 from typing import TYPE_CHECKING
 
+from .exceptions import (
+    ArbolGenealogicoError,
+    EliminacionConDescendientesError,
+    IDInvalidoError,
+    PersonaNoEncontradaError,
+    RelacionInvalidaError,
+)
 from .models import Persona
 from .utils.logger import get_logger
 from .validators import FamilyValidator
@@ -25,11 +32,13 @@ class ArbolGenealogico:  # funcionará como repositorio de personas
 
         Genera un identificador unico para la persona, valida el identificador
         y crea un nuevo objeto persona
+
         Args:
             nombre (str): El nombre a registrar.
 
         Raises:
-            ValueError: Si el ID generado no es válido o se viola alguna restricción de validación.
+            IDInvalidoError: Si el ID generado no es válido o ya existe.
+            ArbolGenealogicoError: Para otros errores del sistema.
 
         Returns:
             Persona: El objeto persona recién registrado.
@@ -48,9 +57,11 @@ class ArbolGenealogico:  # funcionará como repositorio de personas
             logger.debug(f"Total de personas en árbol: {len(self.personas)}")
 
             return nueva_persona
-        except ValueError as e:
+        except (IDInvalidoError, ArbolGenealogicoError) as e:
+            # Las excepciones personalizadas ya tienen mensajes descriptivos,
+            # las propagamos directamente sin envolverlas
             logger.warning(f"Error al registrar persona '{nombre}': {e}")
-            raise ValueError(f"Error al registrar persona: {e}")
+            raise
 
     def init_get_root(self) -> list["Persona"]:
         """Buscamos en nuestro diccionario de personas aquellas que no tienen padres asignados."""
@@ -59,8 +70,17 @@ class ArbolGenealogico:  # funcionará como repositorio de personas
         return raices
 
     def get_persona(self, persona_id: int) -> "Persona":
-        """Devuelve la persona con el ID especificado.
-        Lanza ValueError si no existe.
+        """
+        Devuelve la persona con el ID especificado.
+
+        Args:
+            persona_id: ID de la persona a buscar
+
+        Returns:
+            Persona: La persona encontrada
+
+        Raises:
+            PersonaNoEncontradaError: Si la persona no existe en el árbol.
         """
         logger.debug(f"Buscando persona con ID: {persona_id}")
 
@@ -68,7 +88,7 @@ class ArbolGenealogico:  # funcionará como repositorio de personas
             logger.warning(
                 f"Persona con ID {persona_id} no encontrada (total personas: {len(self.personas)})"
             )
-            raise ValueError(f"Persona con ID {persona_id} no encontrada")
+            raise PersonaNoEncontradaError(persona_id=persona_id)
 
         persona = self.personas[persona_id]
         logger.debug(f"Persona encontrada: {persona.nombre} (ID: {persona_id})")
@@ -93,7 +113,10 @@ class ArbolGenealogico:  # funcionará como repositorio de personas
             hijo: La persona que será hijo
 
         Raises:
-            ValueError: Si la relación es inválida (ciclos, límite de padres, etc.)
+            RelacionInvalidaError: Si la relación es inválida (ciclos, límite de padres, etc.)
+            CicloTemporalError: Si se detecta un ciclo temporal
+            LimitePadresExcedidoError: Si el hijo ya tiene 2 padres
+            RelacionIncestuosaError: Si existe relación de pareja entre padre e hijo
 
         Example:
             >>> arbol = ArbolGenealogico()
@@ -121,15 +144,25 @@ class ArbolGenealogico:  # funcionará como repositorio de personas
                 f"Hijo ahora tiene {len([p for p in hijo.padres if p is not None])} padre(s)"
             )
 
-        except ValueError as e:
+        except RelacionInvalidaError as e:
+            # Las excepciones de validación ya tienen mensajes descriptivos,
+            # las propagamos directamente para mantener el contexto
             logger.warning(
                 f"Error al añadir relación padre-hijo ({padre.nombre} -> {hijo.nombre}): {e}"
             )
-            raise ValueError(f"Error al añadir hijo: {e}")
+            raise
 
     def add_pareja(self, persona1: "Persona", persona2: "Persona") -> None:
-        """Añade una pareja a dos personas.
-        Lanza ValueError si no es válido.
+        """
+        Añade una pareja a dos personas.
+
+        Args:
+            persona1: Primera persona
+            persona2: Segunda persona
+
+        Raises:
+            RelacionInvalidaError: Si la relación es inválida
+            RelacionIncestuosaError: Si son padre-hijo y no pueden ser pareja
         """
         logger.debug(
             f"Intentando agregar relación de pareja: {persona1.nombre} (ID: {persona1.id}) <-> {persona2.nombre} (ID: {persona2.id})"  # noqa: E501
@@ -146,15 +179,23 @@ class ArbolGenealogico:  # funcionará como repositorio de personas
                 f"Relación de pareja creada exitosamente: {persona1.nombre} <-> {persona2.nombre}"
             )
 
-        except ValueError as e:
+        except RelacionInvalidaError as e:
+            # Propagar la excepción específica manteniendo el contexto
             logger.warning(
                 f"Error al añadir relación de pareja ({persona1.nombre} <-> {persona2.nombre}): {e}"
             )
-            raise ValueError(f"Error al añadir pareja: {e}")
+            raise
 
     def remove_pareja(self, persona1: "Persona", persona2: "Persona") -> None:
-        """Remueve una pareja de dos personas.
-        Lanza ValueError si no es válido.
+        """
+        Remueve una pareja de dos personas.
+
+        Args:
+            persona1: Primera persona
+            persona2: Segunda persona
+
+        Raises:
+            ParejaNoExisteError: Si las personas no son pareja entre sí
         """
         logger.debug(
             f"Intentando remover relación de pareja: {persona1.nombre} (ID: {persona1.id}) <-> {persona2.nombre} (ID: {persona2.id})"  # noqa: E501
@@ -171,15 +212,25 @@ class ArbolGenealogico:  # funcionará como repositorio de personas
                 f"Relación de pareja removida exitosamente: {persona1.nombre} <-> {persona2.nombre}"
             )
 
-        except ValueError as e:
+        except RelacionInvalidaError as e:
+            # Propagar la excepción específica (ParejaNoExisteError)
             logger.warning(
                 f"Error al remover relación de pareja ({persona1.nombre} <-> {persona2.nombre}): {e}"  # noqa: E501
             )
-            raise ValueError(f"Error al remover pareja: {e}")
+            raise
 
     def eliminar_persona(self, persona_id: int, confirmar_rotura: bool = False) -> None:
-        """Elimina una persona.
-        Lanza ValueError si no es válido.
+        """
+        Elimina una persona del árbol.
+
+        Args:
+            persona_id: ID de la persona a eliminar
+            confirmar_rotura: Si es True, elimina incluso si tiene descendientes
+
+        Raises:
+            PersonaNoEncontradaError: Si la persona no existe
+            EliminacionConDescendientesError: Si la persona tiene descendientes y
+                                             confirmar_rotura es False
         """
         logger.debug(
             f"Intentando eliminar persona con ID: {persona_id} (confirmar_rotura: {confirmar_rotura})"  # noqa: E501
@@ -187,7 +238,7 @@ class ArbolGenealogico:  # funcionará como repositorio de personas
 
         if persona_id not in self.personas:
             logger.warning(f"Intento de eliminar persona inexistente (ID: {persona_id})")
-            raise ValueError(f"Persona con ID {persona_id} no encontrada")
+            raise PersonaNoEncontradaError(persona_id=persona_id)
 
         persona = self.personas[persona_id]
         logger.debug(
@@ -198,6 +249,7 @@ class ArbolGenealogico:  # funcionará como repositorio de personas
         if persona.hijos and not confirmar_rotura:
             logger.debug(f"Persona {persona.nombre} tiene descendientes, validando impacto")
             validador = FamilyValidator(self.personas)
+            # Esta validación lanzará EliminacionConDescendientesError si tiene hijos
             validador.validar_impacto_eliminacion(persona)
 
         # 1 desvincular la pareja

@@ -1,5 +1,14 @@
 from typing import TYPE_CHECKING, Optional
 
+from .exceptions import (
+    CicloTemporalError,
+    EliminacionConDescendientesError,
+    IDInvalidoError,
+    LimitePadresExcedidoError,
+    ParejaNoExisteError,
+    RelacionIncestuosaError,
+    RelacionInvalidaError,
+)
 from .utils.logger import get_logger
 
 if TYPE_CHECKING:
@@ -36,7 +45,7 @@ class FamilyValidator:  # funcionará como validador de relaciones
             ValueError: Si la relación es inválida
         """
         logger.debug(
-            f"Validando relación '{relacion}': {persona1.nombre} (ID: {persona1.id}) <-> {persona2.nombre} (ID: {persona2.id})" # noqa: E501
+            f"Validando relación '{relacion}': {persona1.nombre} (ID: {persona1.id}) <-> {persona2.nombre} (ID: {persona2.id})"  # noqa: E501
         )
 
         match relacion:
@@ -50,7 +59,10 @@ class FamilyValidator:  # funcionará como validador de relaciones
                 self._validar_hijo(persona1, persona2)
             case _:
                 logger.error(f"Tipo de relación inválida: {relacion}")
-                raise ValueError("Relacion no valida")
+                raise RelacionInvalidaError(
+                    message=f"Tipo de relación inválida: {relacion}",
+                    tipo_relacion=relacion,
+                )
 
     def _validar_hijo(self, padre: "Persona", hijo: "Persona"):
         """
@@ -61,9 +73,14 @@ class FamilyValidator:  # funcionará como validador de relaciones
         # regla 1: no puede ser su propio padre
         if padre.id == hijo.id:
             logger.warning(
-                f"Intento de relación padre-hijo inválida: {padre.nombre} no puede ser su propio padre" # noqa: E501
+                f"Intento de relación padre-hijo inválida: {padre.nombre} no puede ser su propio padre"  # noqa: E501
             )
-            raise ValueError(f"{padre.nombre} no puede ser su propio padre")
+            raise RelacionInvalidaError(
+                message=f"{padre.nombre} no puede ser su propio padre",
+                persona1_nombre=padre.nombre,
+                persona2_nombre=hijo.nombre,
+                tipo_relacion="padre-hijo",
+            )
         # regla 2: maximo 2 padres
         self._limite_padres(hijo)
 
@@ -90,7 +107,9 @@ class FamilyValidator:  # funcionará como validador de relaciones
 
         if persona.padres[0] is not None and persona.padres[1] is not None:
             logger.warning(f"Límite de padres excedido para {persona.nombre}: ya tiene 2 padres")
-            raise ValueError("La persona ya tiene 2 padres")
+            raise LimitePadresExcedidoError(
+                persona_nombre=persona.nombre,
+            )
 
     def _no_pareja_descendiente(self, hijo: "Persona", padre: "Persona") -> None:
         """
@@ -121,13 +140,12 @@ class FamilyValidator:  # funcionará como validador de relaciones
                 f"Relación inválida detectada: {hijo.nombre} y {padre.nombre} son pareja"
             )
 
-            raise ValueError(f"{hijo.nombre} no puede ser hijo de {padre.nombre} porque son pareja")
+            raise RelacionIncestuosaError(hijo.nombre, padre.nombre, "padre-hijo")
         if (padre.pareja is not None) and (padre.pareja.id == hijo.id):
             logger.warning(
                 f"Relación inválida detectada: {padre.nombre} y {hijo.nombre} son pareja"
             )
-
-            raise ValueError(f"{hijo.nombre} no puede ser hijo de {padre.nombre} porque son pareja")
+            raise RelacionIncestuosaError(padre.nombre, hijo.nombre, "padre-hijo")
 
     def _deteccion_ciclos(self, hijo: "Persona", padre: "Persona"):
         """
@@ -139,7 +157,7 @@ class FamilyValidator:  # funcionará como validador de relaciones
 
         if self._es_ancestro_de(hijo, padre):
             logger.error(f"¡Ciclo temporal detectado! {hijo.nombre} es ancestro de {padre.nombre}")
-            raise ValueError(f"¡Paradoja temporal! {hijo.nombre} es ancestro de {padre.nombre}.")
+            raise CicloTemporalError(hijo.nombre, padre.nombre)
 
         logger.debug(f"No se detectaron ciclos temporales entre {hijo.nombre} y {padre.nombre}")
 
@@ -175,16 +193,16 @@ class FamilyValidator:  # funcionará como validador de relaciones
 
         if id_nuevo is None:
             logger.warning("Intento de usar ID nulo")
-            raise ValueError("El id no puede ser nulo")
+            raise IDInvalidoError("El id no puede ser nulo")
 
         if id_nuevo <= 0:
             logger.warning(f"ID inválido (debe ser positivo): {id_nuevo}")
-            raise ValueError(f"El id {id_nuevo} debe ser un entero positivo")
+            raise IDInvalidoError(f"El id {id_nuevo} debe ser un entero positivo")
 
         if id_nuevo in self.personas_existentes:
             persona_existente = self.personas_existentes[id_nuevo]
             logger.warning(f"ID {id_nuevo} ya existe: pertenece a {persona_existente.nombre}")
-            raise ValueError(f"El id {id_nuevo} ya pertenece a otra persona")
+            raise IDInvalidoError(f"El id {id_nuevo} ya pertenece a otra persona")
 
         logger.debug(f"ID {id_nuevo} validado exitosamente")
 
@@ -196,30 +214,38 @@ class FamilyValidator:  # funcionará como validador de relaciones
 
         if persona1.id == persona2.id:
             logger.warning(f"Intento de relación de pareja consigo mismo: {persona1.nombre}")
-            raise ValueError(f"{persona1.nombre} no puede ser su propia pareja")
+            raise RelacionInvalidaError(f"{persona1.nombre} no puede ser su propia pareja")
 
         if persona1.pareja is not None:
             logger.warning(f"{persona1.nombre} ya tiene pareja: {persona1.pareja.nombre}")
-            raise ValueError(f"{persona1.nombre} ya tiene una pareja: {persona1.pareja.nombre}.")
+            raise RelacionInvalidaError(
+                f"{persona1.nombre} ya tiene una pareja: {persona1.pareja.nombre}."
+            )
 
         if persona2.pareja is not None:
             logger.warning(f"{persona2.nombre} ya tiene pareja: {persona2.pareja.nombre}")
-            raise ValueError(f"{persona2.nombre} ya tiene una pareja: {persona2.pareja.nombre}.")
+            raise RelacionInvalidaError(
+                f"{persona2.nombre} ya tiene una pareja: {persona2.pareja.nombre}."
+            )
 
         if persona1.id in [p.id for p in persona2.padres if p is not None]:
             logger.warning(
                 f"Relación padre-hijo detectada: {persona1.nombre} es padre de {persona2.nombre}"
             )
-            raise ValueError(
-                f"{persona1.nombre} es padre/madre de {persona2.nombre}. No pueden ser pareja."
+            raise RelacionIncestuosaError(
+                persona1_nombre=persona1.nombre,
+                persona2_nombre=persona2.nombre,
+                tipo_intento="pareja",
             )
 
         if persona2.id in [p.id for p in persona1.padres if p is not None]:
             logger.warning(
                 f"Relación padre-hijo detectada: {persona2.nombre} es padre de {persona1.nombre}"
             )
-            raise ValueError(
-                f"{persona2.nombre} es padre/madre de {persona1.nombre}. No pueden ser pareja."
+            raise RelacionIncestuosaError(
+                persona1_nombre=persona2.nombre,
+                persona2_nombre=persona1.nombre,
+                tipo_intento="pareja",
             )
 
         logger.debug(f"Validación de pareja exitosa: {persona1.nombre} <-> {persona2.nombre}")
@@ -236,13 +262,13 @@ class FamilyValidator:  # funcionará como validador de relaciones
                 logger.warning(
                     "Intento de remover pareja cuando una persona no tiene pareja asignada"
                 )
-                raise ValueError(f"{persona1.nombre} o {persona2.nombre} no tiene pareja")
+                raise ParejaNoExisteError(persona1.nombre, persona2.nombre, razon="no tiene pareja")
 
             if (persona1.pareja.id != persona2.id) or (persona2.pareja.id != persona1.id):
                 logger.warning(
                     f"{persona1.nombre} y {persona2.nombre} no son pareja según registros"
                 )
-                raise ValueError(f"{persona1.nombre} y {persona2.nombre} no son pareja")
+                raise ParejaNoExisteError(persona1.nombre, persona2.nombre, razon="no son pareja")
 
             logger.debug("Validación para remover pareja exitosa")
         except ValueError as e:
@@ -259,12 +285,8 @@ class FamilyValidator:  # funcionará como validador de relaciones
 
         if persona.hijos:
             logger.warning(
-                f"Intento de eliminar persona con descendientes: {persona.nombre} tiene {len(persona.hijos)} hijo(s)" # noqa: E501
+                f"Intento de eliminar persona con descendientes: {persona.nombre} tiene {len(persona.hijos)} hijo(s)"  # noqa: E501
             )
-            raise ValueError(
-                f"ADVERTENCIA: {persona.nombre} tiene descendientes. "
-                "Eliminar este nodo dividirá el árbol en dos y romperá el linaje. "
-                "¿Desea continuar?"
-            )
+            raise EliminacionConDescendientesError(persona.nombre, len(persona.hijos))
 
         logger.debug(f"Validación de impacto de eliminación exitosa para {persona.nombre}")
