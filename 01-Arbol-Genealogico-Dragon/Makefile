@@ -6,6 +6,14 @@ install:
 test:
 	pytest
 
+coverage:
+	pytest --cov=src --cov-report=term-missing --cov-report=html
+
+coverage-view:
+	pytest --cov=src --cov-report=html
+	@echo "Coverage report generated in htmlcov/index.html"
+	@echo "Open it with: python -m http.server --directory htmlcov"
+
 lint:
 	ruff check .
 

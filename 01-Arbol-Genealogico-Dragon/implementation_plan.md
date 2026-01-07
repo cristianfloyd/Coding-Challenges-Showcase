@@ -131,13 +131,14 @@ Transformar el proyecto de un ejercicio bien implementado a un showcase profesio
   - [x] Generar badge de coverage automáticamente ✅
   - [x] Commit automático del badge en main ✅
   - [x] Agregar step de security scanning (safety, bandit) ✅
-  - [ ] Mejorar reportes de coverage (HTML report en artifacts)
+  - [x] Mejorar reportes de coverage (HTML report en artifacts) ✅
   - [ ] Agregar cache de dependencias para velocidad
   - [ ] Agregar matrix testing (múltiples versiones de Python: 3.10, 3.11, 3.12)
   - **Archivos modificados:** `.github/workflows/ci-01-dragon.yml`, `pyproject.toml`, `Makefile` ✅
   - **Completado (security scanning):** 2026-01-07
+  - **Completado (coverage HTML):** 2026-01-07
   - **Archivos pendientes:** `.github/workflows/ci-01-dragon.yml` (mejoras restantes)
-  - **Tiempo estimado:** 1 hora adicional
+  - **Tiempo estimado:** 30 minutos adicionales
 
 - [ ] **9. Dependencias con Versiones Más Estrictas**
   - [ ] Revisar y fijar versiones en `pyproject.toml`

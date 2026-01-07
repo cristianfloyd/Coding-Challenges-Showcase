@@ -173,7 +173,20 @@ pytest --cov=src --cov-report=term-missing
 
 # O usar el Makefile
 make test
+
+# Generar reporte HTML de coverage
+make coverage
+# El reporte estará disponible en htmlcov/index.html
+
+# O abrir el reporte en el navegador automáticamente
+make coverage-view
 ```
+
+**Reportes de Coverage:**
+
+- **Terminal**: Se muestra en la consola al ejecutar tests
+- **HTML Local**: Ejecuta `make coverage` y abre `htmlcov/index.html`
+- **CI/CD Artifacts**: Después de cada build en GitHub Actions, el reporte HTML está disponible como artifact (`coverage-html-report`) con retención de 30 días
 
 ### Security Scanning
 

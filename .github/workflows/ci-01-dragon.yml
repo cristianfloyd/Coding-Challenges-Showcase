@@ -45,7 +45,15 @@ jobs:
 
       - name: Run Tests with Coverage
         run: |
-          pytest --cov=src --cov-report=json:coverage.json --cov-report=term-missing
+          pytest --cov=src --cov-report=json:coverage.json --cov-report=term-missing --cov-report=html
+
+      - name: Upload Coverage HTML Report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: coverage-html-report
+          path: 01-Arbol-Genealogico-Dragon/htmlcov/
+          retention-days: 30
 
       - name: Generate Coverage Badge
         run: |
