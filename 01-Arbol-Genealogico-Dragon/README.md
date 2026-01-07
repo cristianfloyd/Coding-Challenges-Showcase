@@ -8,9 +8,10 @@
 [![Type Check](https://img.shields.io/badge/Type%20Check-Pyright%20Strict-blue.svg)](https://github.com/microsoft/pyright)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Architecture](https://img.shields.io/badge/Architecture-SOLID-orange.svg)](https://github.com)
+
 > Sistema de gestión de árboles genealógicos con validaciones complejas, implementado siguiendo principios **SOLID**, **Clean Code** y **Design Patterns**. Proyecto que demuestra competencia en arquitectura de software, testing exhaustivo y buenas prácticas de desarrollo.
 
-## 🎯 Highlights para Reclutadores
+## 🎯 Highlights
 
 ### Logros Técnicos
 
@@ -152,6 +153,74 @@ Sistema completo de gestión de árboles genealógicos que permite:
 pytest --cov=src --cov-report=term-missing
 ```
 
+## 📋 Sistema de Logging
+
+Este proyecto implementa un sistema de logging estructurado siguiendo mejores prácticas de la industria.
+
+### Configuración
+
+El sistema de logging está centralizado en `src/utils/logger.py` y se inicializa automáticamente al iniciar la aplicación.
+
+**Ubicación del archivo de logs:**
+
+- logs/arbol_genealogico.log
+
+
+### Niveles de Log
+
+| Nivel | Uso | Ejemplo |
+|-------|-----|---------|
+| **DEBUG** | Información detallada para debugging | "Buscando persona con ID: 42" |
+| **INFO** | Eventos importantes de la aplicación | "Persona registrada exitosamente: Daenerys (ID: 5)" |
+| **WARNING** | Situaciones que requieren atención pero no son errores | "Límite de padres excedido para persona X" |
+| **ERROR** | Errores que requieren atención inmediata | "Error al registrar persona: ID ya existe" |
+
+### Separación de Concerns
+
+El proyecto mantiene una separación clara entre:
+
+- **Logging técnico** (`logging`): Para debugging, auditoría y monitoreo
+  - Se guarda en archivo y consola (solo errores)
+  - Usa el módulo estándar `logging` de Python
+  - Formato estructurado con timestamp, módulo, nivel y mensaje
+
+- **Output de usuario** (`print()`): Para la interfaz interactiva CLI
+  - Mensajes amigables para el usuario
+  - No debe reemplazarse con logging
+
+### Ejemplos de Uso
+
+#### En código nuevo:
+
+
+```python
+from src.utils.logger import get_logger
+
+logger = get_logger(__name__)
+def mi_funcion():
+    logger.debug("Iniciando operación compleja")
+    try:
+        # ... código ...
+        logger.info("Operación completada exitosamente")
+    except Exception as e:
+        logger.error(f"Error en operación: {e}")
+        raise
+```
+
+#### Configuración personalizada:
+
+```python
+from src.utils.logger import LoggerConfig
+from pathlib import Path
+
+logger = LoggerConfig.setup_logger(
+    name="mi_modulo",
+    level=logging.DEBUG,  # Nivel personalizado
+    log_file=Path("logs/mi_log.log")  # Archivo personalizado
+)
+
+```
+
 **Resultados:**
 - ✅ **103 tests** pasando
 - ✅ **94% cobertura** total
@@ -289,7 +358,7 @@ Menu Principal
 
 - 🔗 GitHub: [@cristianfloyd](https://github.com/cristianfloyd)
 - 💼 LinkedIn: [Tu perfil](https://linkedin.com/in/tu-perfil)
-- 📧 Email: cristianfloyd@gmail.comm
+- 📧 Email: ccristianfloyd@gmail.com
 
 ---
 
