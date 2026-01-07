@@ -25,14 +25,14 @@
 
 ### Habilidades Demostradas
 
-✅ **Arquitectura de Software**: Separación de responsabilidades, capas bien definidas  
-✅ **Principios SOLID**: Aplicación práctica en todos los módulos  
-✅ **Design Patterns**: Visitor, Repository, Factory implementados correctamente  
-✅ **Testing Profesional**: 103 tests con fixtures reutilizables y mocks  
-✅ **Clean Code**: Refactorización, nombres descriptivos, funciones pequeñas  
-✅ **Type Hints**: Código completamente tipado  
-✅ **CI/CD**: Pipeline automatizado configurado  
-✅ **Estructuras de Datos**: Árboles, grafos, algoritmos de recorrido  
+✅ **Arquitectura de Software**: Separación de responsabilidades, capas bien definidas
+✅ **Principios SOLID**: Aplicación práctica en todos los módulos
+✅ **Design Patterns**: Visitor, Repository, Factory implementados correctamente
+✅ **Testing Profesional**: 103 tests con fixtures reutilizables y mocks
+✅ **Clean Code**: Refactorización, nombres descriptivos, funciones pequeñas
+✅ **Type Hints**: Código completamente tipado
+✅ **CI/CD**: Pipeline automatizado configurado
+✅ **Estructuras de Datos**: Árboles, grafos, algoritmos de recorrido
 
 ## 📋 Tabla de Contenidos
 
@@ -245,7 +245,7 @@ def test_agregar_persona_exito(mock_error, mock_success, arbol_vacio):
     """Test: Agregar persona exitosamente"""
     ui = DinastiaUI(arbol_vacio)
     ui.agregar_persona()
-    
+
     assert len(arbol_vacio.personas) == 1
     mock_success.assert_called()
     mock_error.assert_not_called()
