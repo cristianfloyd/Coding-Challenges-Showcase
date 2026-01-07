@@ -187,11 +187,13 @@ class DinastiaUI:
 
     @overload
     @staticmethod
-    def pedir_dato(mensaje: str, es_entero: Literal[True]) -> int: ...
+    def pedir_dato(mensaje: str, es_entero: Literal[True]) -> int:
+        ...
 
     @overload
     @staticmethod
-    def pedir_dato(mensaje: str, es_entero: Literal[False]) -> str: ...
+    def pedir_dato(mensaje: str, es_entero: Literal[False]) -> str:
+        ...
 
     @staticmethod
     def pedir_dato(mensaje: str, es_entero: bool = False) -> None | str | int:

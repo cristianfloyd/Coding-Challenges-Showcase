@@ -16,7 +16,8 @@ class ArbolRepository(Protocol):
 
     # Propiedad para acceder a las personas
     @property
-    def personas(self) -> dict[int, "Persona"]: ...
+    def personas(self) -> dict[int, "Persona"]:
+        ...
 
     def registrar_persona(self, nombre: str) -> "Persona":
         """

@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from .models import Persona
 
 if TYPE_CHECKING:
-    from .interfaces import ArbolRepository
+    pass
 
 from .exceptions import (
     ArbolGenealogicoError,
@@ -59,7 +59,7 @@ class DataLoaderDemo:
                 return p
         raise PersonaNoEncontradaError(
             persona_id=None,
-            message=f"Error interno: Persona '{nombre}' no encontrada durante la carga."
+            message=f"Error interno: Persona '{nombre}' no encontrada durante la carga.",
         )
 
     def _cargar_generacion_aegon_i(self, arbol: "ArbolRepository") -> None:

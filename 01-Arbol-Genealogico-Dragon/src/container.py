@@ -1,10 +1,7 @@
 from typing import TYPE_CHECKING, Protocol
 
 if TYPE_CHECKING:
-    from .data_loader import DataLoaderDemo
     from .interfaces import ArbolRepository, DataLoaderProtocol, UIProtocol
-    from .repository import ArbolGenealogico
-    from .ui import DinastiaUI
 
 from .data_loader import DataLoaderDemo
 from .repository import ArbolGenealogico
