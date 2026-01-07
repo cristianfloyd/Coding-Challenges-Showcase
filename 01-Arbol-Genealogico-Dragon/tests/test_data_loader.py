@@ -5,7 +5,6 @@ import pytest
 
 from src.data_loader import DataLoaderDemo
 from src.exceptions import (
-    ArbolGenealogicoError,
     ParejaNoExisteError,
     PersonaNoEncontradaError,
 )

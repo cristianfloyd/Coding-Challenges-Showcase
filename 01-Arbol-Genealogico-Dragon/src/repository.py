@@ -2,7 +2,6 @@ from typing import TYPE_CHECKING
 
 from .exceptions import (
     ArbolGenealogicoError,
-    EliminacionConDescendientesError,
     IDInvalidoError,
     PersonaNoEncontradaError,
     RelacionInvalidaError,

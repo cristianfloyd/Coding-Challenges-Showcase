@@ -8,7 +8,6 @@ from src.exceptions import (
     IDInvalidoError,
     LimitePadresExcedidoError,
     ParejaNoExisteError,
-    PersonaNoEncontradaError,
     RelacionIncestuosaError,
     RelacionInvalidaError,
 )
