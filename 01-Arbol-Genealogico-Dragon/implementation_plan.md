@@ -54,13 +54,12 @@ Transformar el proyecto de un ejercicio bien implementado a un showcase profesio
   - [x] Agregar logging a operaciones críticas en main.py ✅
   - [x] Configurar output a archivo (`logs/arbol_genealogico.log`) ✅
   - [x] Actualizar tests para verificar logs cuando sea necesario ✅
-  - [ ] Agregar logging a operaciones internas en `src/repository.py`
-  - [ ] Agregar logging a validaciones en `src/validators.py`
-  - [ ] Documentar niveles de log en README
+  - [x] Agregar logging a operaciones internas en `src/repository.py`
+  - [x] Agregar logging a validaciones en `src/validators.py`
+  - [x] Documentar niveles de log en README
   - **Archivos a modificar:** `src/repository.py`, `src/validators.py` (pendientes)
   - **Archivos ya modificados:** `src/main.py`, `src/utils/output.py` ✅
   - **Nota:** Separación de logging/output implementada. Pendiente: más logging interno.
-  - **Tiempo estimado:** 1-2 horas (restante)
 
 
 - [ ] **2. Excepciones Personalizadas**
@@ -105,22 +104,22 @@ Transformar el proyecto de un ejercicio bien implementado a un showcase profesio
 
 ### 🟡 Media Prioridad (Mejora significativa)
 
-- [ ] **6. CHANGELOG.md**
+- [x] **6. CHANGELOG.md**
 
-  - [ ] Crear `CHANGELOG.md` siguiendo formato Keep a Changelog
-  - [ ] Documentar versión 1.0.0 actual
-  - [ ] Establecer proceso para actualizar en futuras versiones
-  - [ ] Referenciar en README principal
+  - [x] Crear `CHANGELOG.md` siguiendo formato Keep a Changelog
+  - [x] Documentar versión 1.0.0 actual
+  - [x] Establecer proceso para actualizar en futuras versiones
+  - [x] Referenciar en README principal
   - **Archivos a crear:** `CHANGELOG.md`
   - **Tiempo estimado:** 30 minutos
 
-- [ ] **7. Badges Adicionales en README**
+- [x] **7. Badges Adicionales en README**
 
-  - [ ] Agregar badge de CI/CD status
-  - [ ] Agregar badge de Ruff (code style)
-  - [ ] Agregar badge de License
-  - [ ] Agregar badge de Python version
-  - [ ] Verificar que todos los badges funcionan
+  - [x] Agregar badge de CI/CD status
+  - [x] Agregar badge de Ruff (code style)
+  - [x] Agregar badge de License
+  - [x] Agregar badge de Python version
+  - [x] Verificar que todos los badges funcionan
   - **Archivos a modificar:** `README.md`, `01-Arbol-Genealogico-Dragon/README.md`
   - **Tiempo estimado:** 30 minutos
 
