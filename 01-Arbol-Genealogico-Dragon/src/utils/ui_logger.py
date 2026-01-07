@@ -27,7 +27,7 @@ class UILoggerInterface(Protocol):
         Args:
             message: Mensaje a registrar
         """
-        ...
+        ...  # pragma: no cover
 
     def info(self, message: str) -> None:
         """
@@ -36,7 +36,7 @@ class UILoggerInterface(Protocol):
         Args:
             message: Mensaje a registrar
         """
-        ...
+        ...  # pragma: no cover
 
     def warning(self, message: str) -> None:
         """
@@ -45,7 +45,7 @@ class UILoggerInterface(Protocol):
         Args:
             message: Mensaje de advertencia a registrar
         """
-        ...
+        ...  # pragma: no cover
 
     def error(self, message: str) -> None:
         """
@@ -54,7 +54,7 @@ class UILoggerInterface(Protocol):
         Args:
             message: Mensaje de error a registrar
         """
-        ...
+        ...  # pragma: no cover
 
     def success(self, message: str) -> None:
         """
@@ -63,7 +63,7 @@ class UILoggerInterface(Protocol):
         Args:
             message: Mensaje de éxito a registrar
         """
-        ...
+        ...  # pragma: no cover
 
 
 class UILogger:

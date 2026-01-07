@@ -1,15 +1,16 @@
-from typing import Protocol
+from typing import Protocol, runtime_checkable
 
 
+@runtime_checkable
 class UserOutputInterface(Protocol):
     def show_message(self, message: str) -> None:
-        ...
+        ...  # pragma: no cover
 
     def show_error(self, message: str) -> None:
-        ...
+        ...  # pragma: no cover
 
     def show_success(self, message: str) -> None:
-        ...
+        ...  # pragma: no cover
 
 
 class ConsoleOutput:
