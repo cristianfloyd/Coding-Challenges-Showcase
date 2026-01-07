@@ -97,9 +97,9 @@ def test_arbol_repository_registrar_persona():
     assert isinstance(persona_registrada, Persona), "Debe retornar una instancia de Persona"
     assert persona_registrada.nombre == nombre_persona, "El nombre debe coincidir"
     assert persona_registrada.id in arbol.personas, "La persona debe estar en el diccionario"
-    assert arbol.personas[persona_registrada.id] == persona_registrada, (
-        "Debe ser la misma instancia"
-    )
+    assert (
+        arbol.personas[persona_registrada.id] == persona_registrada
+    ), "Debe ser la misma instancia"
 
 
 def test_arbol_repository_get_persona():
