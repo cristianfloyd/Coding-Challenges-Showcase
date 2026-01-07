@@ -201,16 +201,18 @@ def validador_con_persona() -> FamilyValidator:
 
 # ==================== FIXTURES DE FACTORY ====================
 @pytest.fixture
-def persona_mock_factory() -> Callable[
-    [
-        int,
-        str,
-        Persona | None,
-        tuple[Persona | None, Persona | None],
-        list[Persona] | None,
-    ],
-    Persona,
-]:
+def persona_mock_factory() -> (
+    Callable[
+        [
+            int,
+            str,
+            Persona | None,
+            tuple[Persona | None, Persona | None],
+            list[Persona] | None,
+        ],
+        Persona,
+    ]
+):
     """Factory para crear mocks de Persona de forma consistente."""
 
     def _create_persona_mock(
