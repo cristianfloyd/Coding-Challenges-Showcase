@@ -30,7 +30,7 @@ Todos los proyectos en este repositorio cumplen con:
 
 - **LinkedIn:** [cristian-arenas](https://www.linkedin.com/in/cristian-arenas/)
 - **Web Personal:** [dev.cristianarenas.com](https://dev.cristianarenas.com)
-- **Email:** [tu-email@ejemplo.com](mailto:cristianfloyd@gmail.com)
+- **Email:** [cristianfloyd@](mailto:cristianfloyd@gmail.com)
 
 ---
 
