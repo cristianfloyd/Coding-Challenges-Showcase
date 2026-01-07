@@ -2,8 +2,8 @@
 
 [![CI/CD](https://github.com/cristianfloyd/Coding-Challenges-Showcase/actions/workflows/ci-01-dragon.yml/badge.svg)](https://github.com/cristianfloyd/Coding-Challenges-Showcase/actions/workflows/ci-01-dragon.yml)
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/Tests-155%20passed-success.svg)](https://github.com)
-[![Coverage](https://img.shields.io/badge/Coverage-95%25-brightgreen.svg)](https://github.com)
+[![Tests](https://img.shields.io/badge/Tests-171%20passed-success.svg)](https://github.com)
+[![Coverage](https://img.shields.io/badge/Coverage-100%25-brightgreen.svg)](https://github.com)
 [![Code Style](https://img.shields.io/badge/Code%20Style-Ruff-black.svg)](https://github.com/astral-sh/ruff)
 [![Type Check](https://img.shields.io/badge/Type%20Check-Pyright%20Strict-blue.svg)](https://github.com/microsoft/pyright)
 [![Security](https://img.shields.io/badge/Security-Bandit%20%2B%20Safety-blue.svg)](https://github.com/PyCQA/bandit)
@@ -16,14 +16,14 @@
 
 ### Logros Técnicos
 
-| Métrica | Valor | Significado |
-|---------|-------|-------------|
-| **Cobertura de Tests** | **95%** | Testing exhaustivo y profesional |
-| **Total de Tests** | **155** | Unitarios + Integración |
-| **Módulos con 100%** | **10+ de 15** | Calidad de código excepcional |
-| **Líneas de Código** | **~900** | Proyecto de tamaño medio-complejo |
-| **Design Patterns** | **3+** | Visitor, Repository, Factory, DI Container |
-| **Security Scanning** | **Bandit + Safety** | Análisis automático de vulnerabilidades |
+| Métrica                | Valor               | Significado                                |
+| ---------------------- | ------------------- | ------------------------------------------ |
+| **Cobertura de Tests** | **100%**            | Testing exhaustivo y profesional           |
+| **Total de Tests**     | **171**             | Unitarios + Integración                    |
+| **Módulos con 100%**   | **16 de 16**        | Calidad de código excepcional              |
+| **Líneas de Código**   | **~900**            | Proyecto de tamaño medio-complejo          |
+| **Design Patterns**    | **3+**              | Visitor, Repository, Factory, DI Container |
+| **Security Scanning**  | **Bandit + Safety** | Análisis automático de vulnerabilidades    |
 
 ### Habilidades Demostradas
 
@@ -67,15 +67,15 @@ Sistema completo de gestión de árboles genealógicos que permite:
 
 ### Stack Tecnológico
 
-| Categoría | Tecnologías |
-|-----------|-------------|
-| **Lenguaje** | Python 3.10+ (Type Hints completos) |
-| **Testing** | pytest, pytest-cov, unittest.mock |
-| **Code Quality** | Ruff (linter/formatter), Coverage analysis |
-| **Type Checking** | Pyright (strict mode) |
-| **Security** | Bandit, Safety |
-| **Arquitectura** | Modular, SOLID, Design Patterns, Dependency Injection |
-| **CI/CD** | GitHub Actions (tests, lint, type-check, security) |
+| Categoría         | Tecnologías                                           |
+| ----------------- | ----------------------------------------------------- |
+| **Lenguaje**      | Python 3.10+ (Type Hints completos)                   |
+| **Testing**       | pytest, pytest-cov, unittest.mock                     |
+| **Code Quality**  | Ruff (linter/formatter), Coverage analysis            |
+| **Type Checking** | Pyright (strict mode)                                 |
+| **Security**      | Bandit, Safety                                        |
+| **Arquitectura**  | Modular, SOLID, Design Patterns, Dependency Injection |
+| **CI/CD**         | GitHub Actions (tests, lint, type-check, security)    |
 
 ### Principios y Patrones Aplicados
 
@@ -143,23 +143,23 @@ Sistema completo de gestión de árboles genealógicos que permite:
 
 ### Componentes y Cobertura
 
-| Módulo | Responsabilidad | Cobertura | Estado |
-|--------|----------------|-----------|--------|
-| `models.py` | Entidades del dominio | **100%** ✅ | Perfecto |
-| `repository.py` | Gestión de datos | **100%** ✅ | Perfecto |
-| `validators.py` | Reglas de negocio | **100%** ✅ | Perfecto |
-| `visitors.py` | Patrón Visitor | **100%** ✅ | Perfecto |
-| `data_loader.py` | Carga de datos | **100%** ✅ | Perfecto |
-| `container.py` | Dependency Injection | **100%** ✅ | Perfecto |
-| `interfaces.py` | Protocols/Interfaces | **100%** ✅ | Perfecto |
-| `utils/__init__.py` | Utilidades | **100%** ✅ | Perfecto |
-| `exceptions.py` | Excepciones personalizadas | **96%** ✅ | Excelente |
-| `ui.py` | Interfaz de usuario | **99%** ✅ | Excelente |
-| `utils/logger.py` | Sistema de logging | **82%** ✅ | Bueno |
-| `utils/ui_logger.py` | Logger para UI | **83%** ✅ | Bueno |
-| `config.py` | Configuración | **75%** ✅ | Bueno |
-| `main.py` | Orquestación | **65%** ⚠️ | Aceptable |
-| `utils/output.py` | Separación de output | **60%** ⚠️ | Aceptable |
+| Módulo               | Responsabilidad            | Cobertura   | Estado   |
+| -------------------- | -------------------------- | ----------- | -------- |
+| `models.py`          | Entidades del dominio      | **100%** ✅ | Perfecto |
+| `repository.py`      | Gestión de datos           | **100%** ✅ | Perfecto |
+| `validators.py`      | Reglas de negocio          | **100%** ✅ | Perfecto |
+| `visitors.py`        | Patrón Visitor             | **100%** ✅ | Perfecto |
+| `data_loader.py`     | Carga de datos             | **100%** ✅ | Perfecto |
+| `container.py`       | Dependency Injection       | **100%** ✅ | Perfecto |
+| `interfaces.py`      | Protocols/Interfaces       | **100%** ✅ | Perfecto |
+| `utils/__init__.py`  | Utilidades                 | **100%** ✅ | Perfecto |
+| `exceptions.py`      | Excepciones personalizadas | **100%** ✅ | Perfecto |
+| `ui.py`              | Interfaz de usuario        | **100%** ✅ | Perfecto |
+| `utils/logger.py`    | Sistema de logging         | **100%** ✅ | Perfecto |
+| `utils/ui_logger.py` | Logger para UI             | **100%** ✅ | Perfecto |
+| `config.py`          | Configuración              | **100%** ✅ | Perfecto |
+| `main.py`            | Orquestación               | **100%** ✅ | Perfecto |
+| `utils/output.py`    | Separación de output       | **100%** ✅ | Perfecto |
 
 ### Decisiones de Diseño Clave
 
@@ -210,6 +210,7 @@ make safety    # Verificación de vulnerabilidades en dependencias
 ```
 
 **Herramientas de seguridad:**
+
 - **Bandit**: Detecta vulnerabilidades comunes en código Python
 - **Safety**: Verifica vulnerabilidades conocidas en dependencias (no aplica actualmente: `dependencies = []`)
 
@@ -226,6 +227,7 @@ El proyecto implementa un **Container** siguiendo el patrón Service Locator par
 ### Separación de Concerns
 
 El código mantiene una clara separación entre:
+
 - **Logging técnico**: Para debugging y auditoría (`logging` module)
 - **Output de usuario**: Mensajes interactivos de la CLI (`print()`)
 - **Configuración**: Externalizada mediante `AppConfig.from_env()`
@@ -242,21 +244,21 @@ El sistema de logging está centralizado en `src/utils/logger.py` y se inicializ
 
 - logs/arbol_genealogico.log
 
-
 ### Niveles de Log
 
-| Nivel | Uso | Ejemplo |
-|-------|-----|---------|
-| **DEBUG** | Información detallada para debugging | "Buscando persona con ID: 42" |
-| **INFO** | Eventos importantes de la aplicación | "Persona registrada exitosamente: Daenerys (ID: 5)" |
-| **WARNING** | Situaciones que requieren atención pero no son errores | "Límite de padres excedido para persona X" |
-| **ERROR** | Errores que requieren atención inmediata | "Error al registrar persona: ID ya existe" |
+| Nivel       | Uso                                                    | Ejemplo                                             |
+| ----------- | ------------------------------------------------------ | --------------------------------------------------- |
+| **DEBUG**   | Información detallada para debugging                   | "Buscando persona con ID: 42"                       |
+| **INFO**    | Eventos importantes de la aplicación                   | "Persona registrada exitosamente: Daenerys (ID: 5)" |
+| **WARNING** | Situaciones que requieren atención pero no son errores | "Límite de padres excedido para persona X"          |
+| **ERROR**   | Errores que requieren atención inmediata               | "Error al registrar persona: ID ya existe"          |
 
 ### Separación de Concerns
 
 El proyecto mantiene una separación clara entre:
 
 - **Logging técnico** (`logging`): Para debugging, auditoría y monitoreo
+
   - Se guarda en archivo y consola (solo errores)
   - Usa el módulo estándar `logging` de Python
   - Formato estructurado con timestamp, módulo, nivel y mensaje
@@ -268,7 +270,6 @@ El proyecto mantiene una separación clara entre:
 ### Ejemplos de Uso
 
 #### En código nuevo:
-
 
 ```python
 from src.utils.logger import get_logger
@@ -299,20 +300,21 @@ logger = LoggerConfig.setup_logger(
 ```
 
 **Resultados:**
-- ✅ **155 tests** pasando
-- ✅ **95% cobertura** total
-- ✅ **10+ módulos** con 100% de cobertura
+
+- ✅ **171 tests** pasando
+- ✅ **100% cobertura** total
+- ✅ **Todos los módulos** con 100% de cobertura
 - ✅ **13+ fixtures** reutilizables
 - ✅ **Tests unitarios** + **Tests de integración**
 - ✅ **Security scanning** integrado (Bandit: 0 issues)
 
 ### Tipos de Tests Implementados
 
-| Tipo | Cantidad | Ejemplos |
-|------|----------|----------|
-| **Unit Tests** | 120+ | Validaciones, modelos, repositorio, interfaces, container |
-| **Integration Tests** | 10+ | Carga de datos, flujos completos |
-| **UI Tests** | 25+ | Mocks de input/output, casos edge, UI logger |
+| Tipo                  | Cantidad | Ejemplos                                                                  |
+| --------------------- | -------- | ------------------------------------------------------------------------- |
+| **Unit Tests**        | 136+     | Validaciones, modelos, repositorio, interfaces, container, output, logger |
+| **Integration Tests** | 10+      | Carga de datos, flujos completos                                          |
+| **UI Tests**          | 25+      | Mocks de input/output, casos edge, UI logger                              |
 
 ### Ejemplo de Test Profesional
 
@@ -420,7 +422,11 @@ Menu Principal
 │   ├── test_main.py         # Tests de orquestación
 │   ├── test_container.py    # Tests del DI Container
 │   ├── test_interfaces.py   # Tests de interfaces/protocols
-│   └── test_ui_logger.py    # Tests del UI logger
+│   ├── test_ui_logger.py    # Tests del UI logger
+│   ├── test_output.py       # Tests de salida de usuario
+│   ├── test_logger_config.py # Tests de configuración de logging
+│   ├── test_config.py       # Tests de configuración de la app
+│   └── test_exceptions.py   # Tests de excepciones personalizadas
 ├── scripts/
 │   └── generate_badge.py    # Generación automática de badges
 ├── .github/workflows/
@@ -433,8 +439,8 @@ Menu Principal
 ## 📊 Métricas del Proyecto
 
 - **Líneas de código**: ~900 (sin tests)
-- **Tests**: 155 (unitarios + integración)
-- **Cobertura**: 95%
+- **Tests**: 171 (unitarios + integración)
+- **Cobertura**: 100%
 - **Módulos**: 15+ (src/ + utils/)
 - **Clases**: 10+
 - **Funciones/Métodos**: 70+
@@ -449,7 +455,7 @@ Menu Principal
 1. **Refactorización de código monolítico**: Transformación de 300 líneas en arquitectura modular
 2. **Testing de UI interactiva**: Implementación de mocks complejos para `input()` y métodos estáticos
 3. **Algoritmos de validación**: Detección de ciclos temporales en grafos dirigidos
-4. **Cobertura del 95%**: Logro de cobertura completa en 10+ módulos, con promedio general de 95%
+4. **Cobertura del 100%**: Logro de cobertura completa en todos los módulos (171 tests)
 
 ### Mejores Prácticas Aplicadas
 
@@ -457,7 +463,7 @@ Menu Principal
 - ✅ Docstrings completos
 - ✅ Separación de concerns
 - ✅ Inyección de dependencias (Container pattern)
-- ✅ Testing exhaustivo con fixtures (155 tests)
+- ✅ Testing exhaustivo con fixtures (171 tests)
 - ✅ CI/CD configurado (tests, lint, type-check, security)
 - ✅ Security scanning automático (Bandit + Safety)
 - ✅ Logging estructurado y separado del output de usuario
@@ -469,8 +475,9 @@ Menu Principal
 **Cristian Arenas**
 
 - 🔗 GitHub: [@cristianfloyd](https://github.com/cristianfloyd)
-- 💼 LinkedIn: [Tu perfil](https://linkedin.com/in/tu-perfil)
-- 📧 Email: cristianfloyd@gmail.com
+- 💼 LinkedIn: [cristian-arenas](https://www.linkedin.com/in/cristian-arenas/)
+- 🌐 Web Personal: [dev.cristianarenas.com](https://dev.cristianarenas.com)
+- 📧 Email: [cristianfloyd@gmail.com](mailto:cristianfloyd@gmail.com)
 
 ---
 
