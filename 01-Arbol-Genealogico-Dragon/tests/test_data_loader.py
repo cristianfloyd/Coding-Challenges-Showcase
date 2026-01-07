@@ -9,9 +9,6 @@ from src.models import Persona
 if TYPE_CHECKING:
     from src.interfaces import ArbolRepository
 
-# Import concreto para crear instancias en tests
-from src.repository import ArbolGenealogico
-
 
 def test_cargar_datos_crea_personas(arbol_vacio: "ArbolRepository"):
     """

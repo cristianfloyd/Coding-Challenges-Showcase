@@ -5,7 +5,7 @@ on:
     branches: ["main", "master"]
     paths:
       - "01-Arbol-Genealogico-Dragon/**"
-      - ".github/workflows/ci.yml"
+      - ".github/workflows/ci-01-dragon.yml"
   pull_request:
     branches: ["main", "master"]
     paths:
@@ -36,9 +36,14 @@ jobs:
 
       - name: Code Quality Checks
         run: |
-          make check
+          make lint
+          make type-check
 
-      - name: Run Tests & Generate Badge
+      - name: Run Tests with Coverage
+        run: |
+          pytest --cov=src --cov-report=json:coverage.json --cov-report=term-missing
+
+      - name: Generate Coverage Badge
         run: |
           python scripts/generate_badge.py
 
@@ -47,7 +52,6 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          # Agregamos el archivo con la ruta completa relativa al root del REPO
-          git add coverage_badge.svg
+          git add 01-Arbol-Genealogico-Dragon/coverage_badge.svg
           # Commit only if there are changes
           git diff --quiet && git diff --staged --quiet || (git commit -m "Update coverage badge [skip ci]" && git push)

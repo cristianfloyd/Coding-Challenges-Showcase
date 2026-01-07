@@ -1,6 +1,6 @@
 # 🐉 Árbol Genealógico - Casa del Dragón
 
-[![CI/CD](https://github.com/cristianfloyd/Coding-Challenges-Showcase/workflows/Dragon%20CI%20(Challenge%2001)/badge.svg)](https://github.com/cristianfloyd/Coding-Challenges-Showcase/actions/workflows/ci-01-dragon.yml)
+[![CI/CD](https://github.com/cristianfloyd/Coding-Challenges-Showcase/actions/workflows/ci-01-dragon.yml/badge.svg)](https://github.com/cristianfloyd/Coding-Challenges-Showcase/actions/workflows/ci-01-dragon.yml)
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![Tests](https://img.shields.io/badge/Tests-103%20passed-success.svg)](https://github.com)
 [![Coverage](https://img.shields.io/badge/Coverage-94%25-brightgreen.svg)](https://github.com)

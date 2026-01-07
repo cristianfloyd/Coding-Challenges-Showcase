@@ -1,23 +1,19 @@
 import json
-import subprocess
 
 
 def get_coverage_percentage():
-    """Ejecuta pytest y extrae el porcentaje total del reporte JSON."""
+    """Lee el porcentaje de cobertura del reporte JSON ya generado."""
     try:
-        # Ejecutamos pytest generando un reporte JSON
-        subprocess.run(
-            ["pytest", "--cov=src", "--cov-report=json:coverage.json", "tests/"],
-            check=True,
-            capture_output=True,
-        )
-
+        # Leemos el coverage.json que ya debería existir (generado por pytest)
         with open("coverage.json", "r") as f:
             data = json.load(f)
             # El formato de coverage.json tiene "totals": {"percent_covered": ...}
             return data["totals"]["percent_covered"]
+    except FileNotFoundError:
+        print("Error: coverage.json no encontrado. Asegúrate de ejecutar pytest --cov primero.")
+        return 0
     except Exception as e:
-        print(f"Error calculando cobertura: {e}")
+        print(f"Error leyendo cobertura: {e}")
         return 0
 
 
