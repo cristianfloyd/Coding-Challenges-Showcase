@@ -24,6 +24,7 @@ model_cov.txt
 final_cov.txt
 .approval_tests_temp/
 htmlcov/
+temp*/
 
 # Security Scanning
 bandit-report.json
